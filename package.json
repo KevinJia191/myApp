@@ -1,0 +1,27 @@
+{
+  "name": "kevinjia",
+  "version": "1.0.0",
+  "description": "justforfun",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KevinJia191/myApp.git"
+  },
+  "keywords": [
+    "example",
+    "heroku"
+  ],
+  "author": "kevin jia",
+  "license": "none haha",
+  "bugs": {
+    "url": "https://github.com/KevinJia191/myApp/issues"
+  },
+  "homepage": "https://github.com/KevinJia191/myApp",
+  "dependencies": {
+    "logfmt": "~0.20.0",
+    "express": "~3.4.8"
+  }
+}
