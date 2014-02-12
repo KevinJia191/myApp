@@ -1,29 +1,31 @@
-// web.js
-var express = require("express");
-var logfmt = require("logfmt");
-var app = express();
-
-app.use(logfmt.requestLogger());
+var express = require('express')
+  , app = express.createServer(express.logger())
+  , pg = require('pg').native
+  , connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/dailyjs'
+  , start = new Date()
+  , port = process.env.PORT || 3000
+  , client;
+  
+  client = new pg.Client(connectionString);
+client.connect();
 
 app.get('/', function(req, res) {
-  console.log("Listening on " + port);
-  document.write("heyheyhey");
-  res.write("hi");
-});
+  var date = new Date();
 
-var port = Number(process.env.PORT || 5000);
-app.listen(port, function() {
-  console.log("Listening on " + port);
-});
+  client.query('INSERT INTO visits(date) VALUES($1)', [date]);
 
-/*
-var pg = require('pg');
+  query = client.query('SELECT COUNT(date) AS count FROM visits WHERE date = $1', [date]);
+  query.on('row', function(result) {
+    console.log(result);
 
-pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-  client.query('SELECT * FROM your_table', function(err, result) {
-    done();
-    if(err) return console.error(err);
-    console.log(result.rows);
+    if (!result) {
+      return res.send('No data found');
+    } else {
+      res.send('Visits today: ' + result.count);
+    }
   });
 });
-*/
+
+app.listen(port, function() {
+  console.log('Listening on:', port);
+});
