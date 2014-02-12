@@ -1,31 +1,31 @@
-var express = require('express')
-  , app = express.createServer(express.logger())
-  , pg = require('pg').native
-  , connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/dailyjs'
-  , start = new Date()
-  , port = process.env.PORT || 3000
-  , client;
-  
-  client = new pg.Client(connectionString);
-client.connect();
+// web.js
+var pg = require('pg');
 
-app.get('/', function(req, res) {
-  var date = new Date();
+var express = require("express");
+var logfmt = require("logfmt");
+var app = express();
 
-  client.query('INSERT INTO visits(date) VALUES($1)', [date]);
-
-  query = client.query('SELECT COUNT(date) AS count FROM visits WHERE date = $1', [date]);
-  query.on('row', function(result) {
-    console.log(result);
-
-    if (!result) {
-      return res.send('No data found');
-    } else {
-      res.send('Visits today: ' + result.count);
-    }
+pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+  client.query('SELECT * FROM your_table', function(err, result) {
+    done();
+    if(err) return console.error(err);
+    console.log(result.rows);
   });
 });
 
-app.listen(port, function() {
-  console.log('Listening on:', port);
+
+app.use(logfmt.requestLogger());
+
+app.get('/', function(req, res) {
+  res.send("this is get request");
 });
+
+var port = Number(process.env.PORT || 5000);
+app.listen(port, function() {
+  console.log("Listening on " + port);
+});
+
+
+
+
+
