@@ -117,6 +117,9 @@ app.post('/signup', function(req, res) {
     var model = new userModel();
     var temp = model.add(username, password);
     
+    console.log("temp is " + temp);
+    console.log("error code is " + model.ERR_BAD_USER_EXISTS);
+    
     if(temp == model.ERR_BAD_USERNAME){
         res.write(body);
         res.end("yo your username is blank, :" + username);
