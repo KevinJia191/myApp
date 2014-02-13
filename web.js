@@ -48,7 +48,7 @@ function userModel(){
             var rows = [];
             query.on('row', function(row, res) {
                 rows.push(row);
-            }
+            });
             console.log(rows);
             
             if(currCounter > 0){
