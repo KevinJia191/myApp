@@ -55,8 +55,8 @@ function userModel(){
                 return this.ERR_BAD_USER_EXISTS;
             }
             else{
-                console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1;");
-                client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1;");
+                console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+                client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                 console.log("just inserted " + user + ", " + password + ", 1 into login_info");
                 return this.SUCCESS;
             }
