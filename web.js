@@ -189,7 +189,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     });
     */
     
-    users = result.rows[0].Username;
+    //users = result.rows[0].Username;
   });
 });
 
