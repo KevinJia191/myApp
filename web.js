@@ -43,7 +43,7 @@ function userModel(){
             }
             
             var currCounter = 0;
-            var query = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password], function(err, result){
+            var query = client.query("SELECT count FROM login_info WHERE username="+user+", password=" + password, function(err, result){
                 done();
                 if(err) return cnosole.error(err);
                 currCounter = result.rows[0];
