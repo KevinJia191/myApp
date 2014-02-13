@@ -1,21 +1,21 @@
 var express = require("express");
 var logfmt = require("logfmt");
 var app = express();
-
 var pg = require('pg');
-var users;
 
 
 function userModel(){
     
     this.ERR_BAD_CREDENTIALS = -1;
-    this.ERR_BAD_PASSWORD = -4;
-    this.ERR_BAD_USERNAME = -3;
     this.ERR_BAD_USER_EXISTS = -2;
+    this.ERR_BAD_USERNAME = -3;
+    this.ERR_BAD_PASSWORD = -4;
     this.MAX_PASSWORD_LENGTH = 128;
     this.MAX_USERNAME_LENGTH = 128;
     this.SUCCESS = 1;
+    this.login = login;
     this.add = add;
+    this.TESTAPI_resetFixture = TESTAPI_resetFixture;
 
 
   /* THIS FUNCTION DOES ONE OF THREE THINGS
@@ -33,48 +33,48 @@ function userModel(){
     @params
     user: (string) the username
     password: (string) the password
-    
     */
     function add(user,password){
         
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-
             if(user == ""){
-                return ERR_BAD_USERNAME;
+                console.log("got a username thats an empty string");
+                return this.ERR_BAD_USERNAME;
             }
             
             var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
             
             if(currCounter > 0){
-                return ERR_BAD_USER_EXISTS;
+                console.log("got a user already existing");
+                return this.ERR_BAD_USER_EXISTS;
             }
             else{
                 client.query("INSERT INTO login_info (username, password, count) VALUES ($1, $2, $3)", [user, password, 1]);
+                console.log("just inserted user, password, 1 into login_info"):
+
             }
         
         });
     }
     
-  function TESTAPI_resetFixture(){
-
-  }
+    /*
+    This function tests our api UNIT TESTS
+    deletes all entries from login info table
+    */
+    function TESTAPI_resetFixture(){
+        pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+            client.query("DELETE * FROM login_info;");
+        });
+        console.log("just deleted all entries in login info table");
+        return this.SUCCESS;
+    }
 
 }
-
-
-
-
-
-
-
 
 app.configure(function(){
   app.use(express.bodyParser());
   app.use(app.router);
 });
-
-
-
 
 
 app.use(logfmt.requestLogger());
