@@ -50,7 +50,6 @@ function userModel(){
     password: (string) the password
     */
     function add(user,password){
-        
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             if(user == ""){
                 console.log("got a username thats an empty string");
@@ -101,19 +100,20 @@ app.get('/', function(req, res) {
   var body="";
   res.writeHead(200);
   res.write('<html><body>'+body+'<br>')
-  res.end('<form action="signup" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Submit"></form></body></html>');
+  res.end('<form action="signup" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="signup"><input type="submit" value="add" onclick=this.form.action="add"></form></body></html>');
 });
 
-
-
 app.post('/signup', function(req, res) {
+    
+    
     var username = req.body.username;
     var password = req.body.password;
-
+    
     console.log("user="+username);
     console.log("pass="+password);
 
-    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
+    var body = "WE ARE IN SIGNUP <button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
+    
     var model = new userModel();
     var temp = model.add(username, password);
     
@@ -132,7 +132,37 @@ app.post('/signup', function(req, res) {
         res.write(body);
         res.end("first time seeing you, " + username);
     }
+});
 
+app.post('/add', function(req, res) {
+    
+    
+    var username = req.body.username;
+    var password = req.body.password;
+    
+    console.log("user="+username);
+    console.log("pass="+password);
+
+    var body = " WE ARE IN ADD <button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
+    
+    var model = new userModel();
+    var temp = model.add(username, password);
+    
+    console.log("temp is " + temp);
+    console.log("error code is " + model.ERR_BAD_USER_EXISTS);
+    
+    if(temp == model.ERR_BAD_USERNAME){
+        res.write(body);
+        res.end("yo your username is blank, :" + username);
+    }
+    if(temp == model.ERR_BAD_USER_EXISTS){
+        res.write(body);
+        res.end("We've seen you before," + username);
+    }
+    else{
+        res.write(body);
+        res.end("first time seeing you, " + username);
+    }
 });
 
 var port = Number(process.env.PORT || 5000);
