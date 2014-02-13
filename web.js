@@ -69,11 +69,9 @@ function userModel(){
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+                    return this.SUCCESS;
                 }
             });
-            
-            return this.SUCCESS;
-            
         });
     }
     
