@@ -36,7 +36,8 @@ function UserModel(){
             return UserModel.ERR_BAD_USERNAME;
         }
     
-        var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password];
+        var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
+        
         if(currCounter > 0){
             return UserModel.ERR_BAD_USER_EXISTS;
         }
