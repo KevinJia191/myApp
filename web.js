@@ -100,13 +100,14 @@ app.post('/signup', function(req, res) {
     var temp = model.add(username, password);
     
     if(temp == model.ERR_BAD_USERNAME){
-        res.end("yo your username is blank, :" + username + "\n" + body);
+        res.write(body);
+        res.end("yo your username is blank, :" + username);
     }
     if(temp == model.ERR_BAD_USER_EXISTS){
-        res.end("We've seen you before," + username + "\n" + body);
+        res.end("We've seen you before," + username);
     }
     else{
-        res.end("first time seeing you! hi," + username + "\n" + body);
+        res.end("first time seeing you! hi," + username);
     }
 
 });
