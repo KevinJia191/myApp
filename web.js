@@ -63,7 +63,7 @@ function userModel(){
   }
 
 }
-
+/*
 UserModel.ERR_BAD_CREDENTIALS = -1;
 UserModel.ERR_BAD_PASSWORD = -4;
 UserModel.ERR_BAD_USERNAME = -3;
@@ -71,6 +71,7 @@ UserModel.ERR_BAD_USER_EXISTS = -2;
 UserModel.MAX_PASSWORD_LENGTH = 128;
 UserModel.MAX_USERNAME_LENGTH = 128;
 UserModel.SUCCESS = 1;
+*/
 
 
 
