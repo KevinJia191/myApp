@@ -1,4 +1,14 @@
 function UserModel(){
+    /*
+    var ERR_BAD_CREDENTIALS = -1;
+    var ERR_BAD_PASSWORD = -4;
+    var ERR_BAD_USERNAME = -3;
+    var ERR_BAD_USER_EXISTS = -2;
+    var MAX_PASSWORD_LENGTH = 128;
+    var MAX_USERNAME_LENGTH = 128;
+    var SUCCESS = 1;
+    */
+
 
   /* THIS FUNCTION DOES ONE OF THREE THINGS
   1) Updates the counts of the logins in the database
@@ -31,20 +41,20 @@ function UserModel(){
     
     */
     function add(user,password){
-    
+        /*
         if(user == ""){
-            return UserModel.ERR_BAD_USERNAME;
+            return ERR_BAD_USERNAME;
         }
     
         var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
         
         if(currCounter > 0){
-            return UserModel.ERR_BAD_USER_EXISTS;
+            return ERR_BAD_USER_EXISTS;
         }
         else{
             client.query("INSERT INTO login_info (username, password, count) VALUES ($1, $2, $3)", [user, password, 1]);
         }
-        
+        */
         
     }
     
@@ -53,6 +63,7 @@ function UserModel(){
   }
 
 }
+
 UserModel.ERR_BAD_CREDENTIALS = -1;
 UserModel.ERR_BAD_PASSWORD = -4;
 UserModel.ERR_BAD_USERNAME = -3;
@@ -60,6 +71,7 @@ UserModel.ERR_BAD_USER_EXISTS = -2;
 UserModel.MAX_PASSWORD_LENGTH = 128;
 UserModel.MAX_USERNAME_LENGTH = 128;
 UserModel.SUCCESS = 1;
+
 
 
 
