@@ -50,7 +50,7 @@ function userModel(){
             }
             else{
                 client.query("INSERT INTO login_info (username, password, count) VALUES ($1, $2, $3)", [user, password, 1]);
-                console.log("just inserted user, password, 1 into login_info"):
+                console.log("just inserted user, password, 1 into login_info");
 
             }
         
