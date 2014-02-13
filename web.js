@@ -1,3 +1,11 @@
+var express = require("express");
+var logfmt = require("logfmt");
+var app = express();
+
+var pg = require('pg');
+var users;
+
+
 function userModel(){
     
     this.ERR_BAD_CREDENTIALS = -1;
@@ -56,12 +64,7 @@ function userModel(){
 
 
 
-var express = require("express");
-var logfmt = require("logfmt");
-var app = express();
 
-var pg = require('pg');
-var users;
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -103,10 +106,6 @@ app.post('/signup', function(req, res) {
       });
     });
     */
-
-
-
-
     res.end("we did it," + username);
 
 });
