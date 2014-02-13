@@ -100,7 +100,7 @@ app.post('/signup', function(req, res) {
     console.log("user="+username);
     console.log("pass="+password);
 
-    var body = "<button onclick='goToHome()'>"+"Click me</button>";
+    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
     var model = new userModel();
     var temp = model.add(username, password);
     
@@ -124,6 +124,3 @@ app.listen(port, function() {
   console.log("Listening on " + port);
 });
 
-function goToHome(){
-    window.location.assign("http://fast-brook-9858.herokuapp.com/");
-}
