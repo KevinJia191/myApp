@@ -17,15 +17,30 @@ function userModel(){
     this.add = add;
     this.TESTAPI_resetFixture = TESTAPI_resetFixture;
 
-
-  /* THIS FUNCTION DOES ONE OF THREE THINGS
-  1) Updates the counts of the logins in the database
-  2) Returns the counts of the logins including this one
-  3) Or else it will return an error code which we have to check for
-  */
-  function login(user,password){
-
-  }
+    var hit_count=0;
+    function login(user,password){
+        var row_count = 0;
+        var update_query;
+        pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+            var query = client.query('Select * from login_info where username=\''+user+'\' AND password=\''+password+'\';', function(err, result) {
+                done();
+                if(err) return console.error(err);
+                console.log("rows length is "+result.rows.length);
+                row_count = result.rows.length;
+                if (row_count<1) {
+                    return UserModel.ERR_BAD_CREDENTIALS;
+                }
+                console.log(result.rows[0].count);
+                console.log("hit_count is %d",hit_count);
+                console.log('the second query is UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';');
+                client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';', function(err, result) {
+                    done();
+                    if(err) return console.error(err);
+                    return row_count;
+                });
+            });
+        });
+    }
   
     /*
     This function checks that the user does not exists, the user name is not empty.
@@ -43,6 +58,7 @@ function userModel(){
             }
             
             var currCounter = 0;
+            console.log("SELECT count FROM login_info WHERE username=\'"+user+"\'AND password=\'" + password+"\';");
             client.query("SELECT count FROM login_info WHERE username=\'"+user+"\'AND password=\'" + password+"\';", function(err, result){
                 done();
                 if(err) return console.error(err);
@@ -55,7 +71,7 @@ function userModel(){
                 return this.ERR_BAD_USER_EXISTS;
             }
             else{
-                console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+                //console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                 client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                 console.log("just inserted " + user + ", " + password + ", 1 into login_info");
                 return this.SUCCESS;
