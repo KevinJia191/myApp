@@ -7,7 +7,7 @@ function userModel(){
     this.MAX_PASSWORD_LENGTH = 128;
     this.MAX_USERNAME_LENGTH = 128;
     this.SUCCESS = 1;
-    
+    this.add = add;
 
 
   /* THIS FUNCTION DOES ONE OF THREE THINGS
@@ -16,19 +16,6 @@ function userModel(){
   3) Or else it will return an error code which we have to check for
   */
   function login(user,password){
-/*
-    client.query('Select * from login_info where username='+user+'AND ', function(err, result) {
-      done();
-      if(err) return console.error(err);
-    });
-    client.query('UPDATE login_info SET count='+, function(err, result) {
-      done();
-      if(err) return console.error(err);
-    });
-    query.on('row',function(row) {
-      if row.length
-    });
-*/
 
   }
   
@@ -63,16 +50,6 @@ function userModel(){
   }
 
 }
-/*
-UserModel.ERR_BAD_CREDENTIALS = -1;
-UserModel.ERR_BAD_PASSWORD = -4;
-UserModel.ERR_BAD_USERNAME = -3;
-UserModel.ERR_BAD_USER_EXISTS = -2;
-UserModel.MAX_PASSWORD_LENGTH = 128;
-UserModel.MAX_USERNAME_LENGTH = 128;
-UserModel.SUCCESS = 1;
-*/
-
 
 
 
