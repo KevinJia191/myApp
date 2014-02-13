@@ -42,16 +42,15 @@ function userModel(){
                 return this.ERR_BAD_USERNAME;
             }
             
-            var query = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
-            console.log("this is query: " + query);
-            
-            var rows = [];
-            query.on('row', function(row, res) {
-                rows.push(row);
+            var query = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password], function(err, result){
+                done();
+                if(err) return cnosole.error(err);
+                var currCounter = result.rows[0];
             });
-            console.log(rows);
+            console.log("this is currcounter: " + currCounter);
+           
             
-            var index = 0;
+            var currCounter = 0;
             if(index > 0){
                 console.log("got a user already existing");
                 return this.ERR_BAD_USER_EXISTS;
@@ -102,8 +101,8 @@ app.post('/signup', function(req, res) {
 
     console.log("user="+username);
     console.log("pass="+password);
-    var body = "<button onclick='window.location.assign(\'http://fast-brook-9858.herokuapp.com\')"+">Click me</button>";
 
+    var body = "<button onclick='window.location.assign(\'http://fast-brook-9858.herokuapp.com\')'"+">Click me</button>";
     var model = new userModel();
     var temp = model.add(username, password);
     
