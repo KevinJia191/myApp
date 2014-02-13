@@ -128,53 +128,23 @@ app.post('/signup', function(req, res) {
     console.log("pass="+password);
     var body = "";
 
+    UserModel().add(username, password);
+
+    /*
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       var query = client.query("SELECT * FROM login_info");
       
       query.on('row',function(row) {
         console.log("the row is"+row.username);
-        /*
-        if (username.length==0 || username.length > 128 ){
-          body="This is an invalid username!"
-        }
-        if (row.username==username){
-          body="You have already been here before!"
-          client.query('UPDATE login_info SET', function(err, result) {
-            done();
-            if(err) return console.error(err);
-            console.log("WE ARE CALLING FROM WITHIN THE POST");
-          });
-        }
-        */
       });
-    /*
-      client.query('SELECT * FROM login_info', function(err, result) {
-        done();
-        if(err) return console.error(err);
-        console.log("WE ARE CALLING FROM WITHIN THE POST");
-      });
-      client.query('INSERT INTO login_info VALUES (1,\''+username+'\',\''+password+'\')', function(err, result) {
-        done();
-        if(err) return console.error(err);
-        console.log("WE ARE CALLING FROM WITHIN THE POST AGAIN");
-        //console.log(result.rows);    
-        query.on('row',function(row) {
-          users = ('our first user is "%s"',row.Username);
-        });
-      });
-*/
-    });
-
-
-
-
-    res.end("we did it");
-    /*
-    User.addUser(username, password, function(err, user) {
-        if (err) throw err;
-        res.redirect('/form');
     });
     */
+
+
+
+
+    res.end("we did it," + username);
+
 });
 
 pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -182,14 +152,6 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     done();
     if(err) return console.error(err);
     console.log("WE WILL BE STARTING HERE");
-    //console.log(result.rows);
-    /*    
-    query.on('row',function(row) {
-      users = ('our first user is "%s"',row.Username);
-    });
-    */
-    
-    //users = result.rows[0].Username;
   });
 });
 
