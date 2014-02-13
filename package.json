@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/KevinJia191/myApp",
   "dependencies": {
-    "pg": "2.x",
+    "pg": "~2.11.1",
     "logfmt": "~0.20.0",
     "express": "~3.4.8"
   }
