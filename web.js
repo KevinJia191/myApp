@@ -43,7 +43,7 @@ function userModel(){
             }
             
             var currCounter = 0;
-            var query = client.query("SELECT count FROM login_info WHERE username="+user+", password=" + password, function(err, result){
+            var query = client.query("SELECT count FROM login_info WHERE username=\'"+user+"\', password=\'" + password+"\';", function(err, result){
                 done();
                 if(err) return console.error(err);
                 currCounter = result.rows[0];
@@ -55,7 +55,7 @@ function userModel(){
                 return this.ERR_BAD_USER_EXISTS;
             }
             else{
-                client.query("INSERT INTO login_info (username, password, count) VALUES ("+user+","+password+",1;");
+                client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\',"+password+",1;");
                 console.log("just inserted " + user + ", " + password + ", 1 into login_info");
                 return this.SUCCESS;
             }
