@@ -128,7 +128,8 @@ app.post('/signup', function(req, res) {
     console.log("pass="+password);
     var body = "";
 
-    UserModel().add(username, password);
+    var model = new UserModel()
+    model.add(username, password);
 
     /*
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
