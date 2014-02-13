@@ -1,5 +1,5 @@
 function UserModel(){
-    /*
+    
     var ERR_BAD_CREDENTIALS = -1;
     var ERR_BAD_PASSWORD = -4;
     var ERR_BAD_USERNAME = -3;
@@ -7,7 +7,7 @@ function UserModel(){
     var MAX_PASSWORD_LENGTH = 128;
     var MAX_USERNAME_LENGTH = 128;
     var SUCCESS = 1;
-    */
+    
 
 
   /* THIS FUNCTION DOES ONE OF THREE THINGS
@@ -41,7 +41,7 @@ function UserModel(){
     
     */
     function add(user,password){
-        /*
+        
         if(user == ""){
             return ERR_BAD_USERNAME;
         }
@@ -54,7 +54,7 @@ function UserModel(){
         else{
             client.query("INSERT INTO login_info (username, password, count) VALUES ($1, $2, $3)", [user, password, 1]);
         }
-        */
+        
         
     }
     
