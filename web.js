@@ -97,18 +97,17 @@ app.post('/signup', function(req, res) {
     var body = "";
 
     var model = new userModel();
-    model.add(username, password);
-
-    /*
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      var query = client.query("SELECT * FROM login_info");
-      
-      query.on('row',function(row) {
-        console.log("the row is"+row.username);
-      });
-    });
-    */
-    res.end("we did it," + username);
+    var temp = model.add(username, password);
+    
+    if(temp == model.ERR_BAD_USERNAME){
+        res.end("yo your username is blank, :" + username);
+    }
+    if(temp == model.ERR_BAD_USER_EXISTS){
+        res.end("hey we've seen  you before," + username);
+    }
+    else{
+        res.end("first user, hi," + username);
+    }
 
 });
 
