@@ -1,12 +1,12 @@
-function UserModel(){
+function userModel(){
     
-    var ERR_BAD_CREDENTIALS = -1;
-    var ERR_BAD_PASSWORD = -4;
-    var ERR_BAD_USERNAME = -3;
-    var ERR_BAD_USER_EXISTS = -2;
-    var MAX_PASSWORD_LENGTH = 128;
-    var MAX_USERNAME_LENGTH = 128;
-    var SUCCESS = 1;
+    this.ERR_BAD_CREDENTIALS = -1;
+    this.ERR_BAD_PASSWORD = -4;
+    this.ERR_BAD_USERNAME = -3;
+    this.ERR_BAD_USER_EXISTS = -2;
+    this.MAX_PASSWORD_LENGTH = 128;
+    this.MAX_USERNAME_LENGTH = 128;
+    this.SUCCESS = 1;
     
 
 
@@ -98,37 +98,22 @@ app.use(logfmt.requestLogger());
 
 app.get('/', function(req, res) {
   var body="";
-  //res.write('Goodbye World!');
-  
-  //res.send('How fancy can we get with this?');
   res.writeHead(200);
   res.write('<html><body>'+body+'<br>')
   res.end('<form action="signup" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Submit"></form></body></html>');
-  /*
-  req.on('data',function(chunk) {
-    body+= chunk;
-    //res.write('<html><body>'+body+'<br>')
-    //res.end('<form method="post">Username <input type="text" name="firstname"><br>Password <input type="text" name="lastname"><input type="submit" value="Submit"></form></body></html>');
-    console.log(body)
-  });
-  */
-  //WE SHOULD USE POST INSTEAD 
 });
 
 
 
 app.post('/signup', function(req, res) {
-    //console.log(req.body);
     var username = req.body.username;
     var password = req.body.password;
-    //res.end('<html><body>'+username+' and '+password+'</body></html>');
-    //var user = req.param("username");
-    //var pass = req.param("password")
+
     console.log("user="+username);
     console.log("pass="+password);
     var body = "";
 
-    var model = new UserModel()
+    var model = new userModel();
     model.add(username, password);
 
     /*
