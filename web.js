@@ -37,20 +37,22 @@ function userModel(){
     */
     function add(user,password){
         
-        if(user == ""){
-            return ERR_BAD_USERNAME;
-        }
-    
-        var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
+        pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+
+            if(user == ""){
+                return ERR_BAD_USERNAME;
+            }
+            
+            var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
+            
+            if(currCounter > 0){
+                return ERR_BAD_USER_EXISTS;
+            }
+            else{
+                client.query("INSERT INTO login_info (username, password, count) VALUES ($1, $2, $3)", [user, password, 1]);
+            }
         
-        if(currCounter > 0){
-            return ERR_BAD_USER_EXISTS;
-        }
-        else{
-            client.query("INSERT INTO login_info (username, password, count) VALUES ($1, $2, $3)", [user, password, 1]);
-        }
-        
-        
+        });
     }
     
   function TESTAPI_resetFixture(){
