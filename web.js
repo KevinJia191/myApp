@@ -43,6 +43,7 @@ function userModel(){
             }
             
             var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
+            console.log("this is currCounter: " + currCounter);
             
             if(currCounter > 0){
                 console.log("got a user already existing");
