@@ -57,7 +57,6 @@ function userModel(){
                 return this.ERR_BAD_USERNAME;
             }
             
-            var currCounter = 0;
             console.log('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';');
             client.query('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';', function(err, result){
                 done();
@@ -67,9 +66,12 @@ function userModel(){
                     console.log("tried to add already existing user");
                     return this.ERR_BAD_USER_EXISTS;
                 }
+                else{
+                    console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+                    client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+                }
             });
-            console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-            client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+            
             return this.SUCCESS;
             
         });
