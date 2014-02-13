@@ -63,19 +63,14 @@ function userModel(){
                 done();
                 if(err) return console.error(err);
                 console.log(result);
-                currCounter = result.rows.length;
+                if(result.rows.length > 0){
+                    console.log("tried to add already existing user");
+                    return this.ERR_BAD_USER_EXISTS:
+                }
             });
-            console.log("this is currCounter: " + currCounter);
-           
-            if(currCounter > 0){
-                console.log("got a user already existing");
-                return this.ERR_BAD_USER_EXISTS;
-            }
-            else{
-                console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-                client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-                return this.SUCCESS;
-            }
+            console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+            client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+            return this.SUCCESS;
             
         });
     }
