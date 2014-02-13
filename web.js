@@ -112,7 +112,7 @@ app.post('/signup', function(req, res) {
     console.log("user="+username);
     console.log("pass="+password);
 
-    var body = "WE ARE IN SIGNUP <button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
+    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN SIGNUP";
     
     var model = new userModel();
     var temp = model.add(username, password);
@@ -143,7 +143,7 @@ app.post('/add', function(req, res) {
     console.log("user="+username);
     console.log("pass="+password);
 
-    var body = " WE ARE IN ADD <button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
+    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN ADD ";
     
     var model = new userModel();
     var temp = model.add(username, password);
