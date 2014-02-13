@@ -62,7 +62,7 @@ function userModel(){
             client.query("SELECT count FROM login_info WHERE username=\'"+user+"\' AND password=\'" + password+"\';", function(err, result){
                 done();
                 if(err) return console.error(err);
-                currCounter = result.row[0].count;
+                currCounter = result.rows[0].count;
             });
             console.log("this is currCounter: " + currCounter);
            
