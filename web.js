@@ -51,7 +51,7 @@ function userModel(){
             }
             else{
                 client.query("INSERT INTO login_info (username, password, count) VALUES ($1, $2, $3)", [user, password, 1]);
-                console.log("just inserted user, password, 1 into login_info");
+                console.log("just inserted" + user + ", " + password + ", 1 into login_info");
                 return this.SUCCESS;
             }
         
@@ -95,7 +95,7 @@ app.post('/signup', function(req, res) {
 
     console.log("user="+username);
     console.log("pass="+password);
-    var body = "<button onclick='window.history.back()'>Click me</button>";
+    var body = "<button onclick='window.location.assign(\'http://fast-brook-9858.herokuapp.com/signup\')'>Click me</button>";
 
     var model = new userModel();
     var temp = model.add(username, password);
