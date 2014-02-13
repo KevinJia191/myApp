@@ -45,6 +45,12 @@ function userModel(){
             var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
             console.log("this is currCounter: " + currCounter);
             
+            var rows = [];
+            query.on('row', function(row, res) {
+                rows.push(row);
+            }
+            console.log(rows);
+            
             if(currCounter > 0){
                 console.log("got a user already existing");
                 return this.ERR_BAD_USER_EXISTS;
@@ -95,7 +101,7 @@ app.post('/signup', function(req, res) {
 
     console.log("user="+username);
     console.log("pass="+password);
-    var body = "<button onclick='window.location.assign(\'http://fast-brook-9858.herokuapp.com/signup\')'>Click me</button>";
+    var body = "<button onclick='window.location.assign(\'http://fast-brook-9858.herokuapp.com/\')'>Click me</button>";
 
     var model = new userModel();
     var temp = model.add(username, password);
