@@ -42,10 +42,11 @@ function userModel(){
                 return this.ERR_BAD_USERNAME;
             }
             
+            var currCounter = 0;
             var query = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password], function(err, result){
                 done();
                 if(err) return cnosole.error(err);
-                var currCounter = result.rows[0];
+                currCounter = result.rows[0];
             });
             console.log("this is currcounter: " + currCounter);
            
@@ -58,7 +59,7 @@ function userModel(){
                 console.log("just inserted" + user + ", " + password + ", 1 into login_info");
                 return this.SUCCESS;
             }
-        
+            
         });
     }
     
