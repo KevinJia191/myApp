@@ -42,8 +42,8 @@ function userModel(){
                 return this.ERR_BAD_USERNAME;
             }
             
-            var currCounter = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
-            console.log("this is currCounter: " + currCounter);
+            var query = client.query("SELECT count FROM login_info WHERE username=$1, password=$2", [user, password]);
+            console.log("this is query: " + query);
             
             var rows = [];
             query.on('row', function(row, res) {
@@ -51,7 +51,8 @@ function userModel(){
             });
             console.log(rows);
             
-            if(currCounter > 0){
+            var index = 0;
+            if(index > 0){
                 console.log("got a user already existing");
                 return this.ERR_BAD_USER_EXISTS;
             }
