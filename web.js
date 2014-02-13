@@ -49,9 +49,7 @@ function userModel(){
             });
             console.log("this is currcounter: " + currCounter);
            
-            
-            var currCounter = 0;
-            if(index > 0){
+            if(currCounter > 0){
                 console.log("got a user already existing");
                 return this.ERR_BAD_USER_EXISTS;
             }
@@ -102,7 +100,7 @@ app.post('/signup', function(req, res) {
     console.log("user="+username);
     console.log("pass="+password);
 
-    var body = "<button onclick='goToHome()'>"+">Click me</button>";
+    var body = "<button onclick='goToHome()'>"+"Click me</button>";
     var model = new userModel();
     var temp = model.add(username, password);
     
