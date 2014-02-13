@@ -65,7 +65,7 @@ function userModel(){
                 console.log(result);
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
-                    return this.ERR_BAD_USER_EXISTS:
+                    return this.ERR_BAD_USER_EXISTS;
                 }
             });
             console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
