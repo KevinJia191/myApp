@@ -94,29 +94,21 @@ app.post('/signup', function(req, res) {
 
     console.log("user="+username);
     console.log("pass="+password);
-    var body = "";
+    var body = "<button onclick='window.history.back()'>Click me</button>";
 
     var model = new userModel();
     var temp = model.add(username, password);
     
     if(temp == model.ERR_BAD_USERNAME){
-        res.end("yo your username is blank, :" + username);
+        res.end("yo your username is blank, :" + username + "\n" + body);
     }
     if(temp == model.ERR_BAD_USER_EXISTS){
-        res.end("hey we've seen  you before," + username);
+        res.end("We've seen you before," + username + "\n" + body);
     }
     else{
-        res.end("first user, hi," + username);
+        res.end("first time seeing you! hi," + username + "\n" + body);
     }
 
-});
-
-pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-  client.query('SELECT * FROM login_info', function(err, result) {
-    done();
-    if(err) return console.error(err);
-    console.log("WE WILL BE STARTING HERE");
-  });
 });
 
 var port = Number(process.env.PORT || 5000);
