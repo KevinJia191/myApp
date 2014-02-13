@@ -58,13 +58,13 @@ function userModel(){
             }
             
             var currCounter = 0;
-            console.log("SELECT count FROM login_info WHERE username=\'"+user+"\'AND password=\'" + password+"\';");
-            client.query("SELECT count FROM login_info WHERE username=\'"+user+"\'AND password=\'" + password+"\';", function(err, result){
+            console.log("SELECT count FROM login_info WHERE username=\'"+user+"\' AND password=\'" + password+"\';");
+            client.query("SELECT count FROM login_info WHERE username=\'"+user+"\' AND password=\'" + password+"\';", function(err, result){
                 done();
                 if(err) return console.error(err);
-                currCounter = result.rows[0];
+                currCounter = result.row[0].count;
             });
-            console.log("this is currcounter: " + currCounter);
+            console.log("this is currCounter: " + currCounter);
            
             if(currCounter > 0){
                 console.log("got a user already existing");
