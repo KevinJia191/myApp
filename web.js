@@ -43,6 +43,8 @@ function TestUsers(){
             
         },
         function(){
+            var model = new UsersModel();
+            model.add("user1", "password");
             temp = model.add("user1", "password");
         },
         function(){
