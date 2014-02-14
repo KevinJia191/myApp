@@ -257,7 +257,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     var model = new UsersModel();
     framework.setup();
     framework.testAdd1(function(result){
-        assert.equal(model.SUCCESS, temp);
+        assert.equal(model.SUCCESS, result);
         console.log("testadd1 is good");
     });
     //framework.testAddExists();
