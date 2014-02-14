@@ -209,7 +209,7 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
     res.end("resetFixtured");
 });
 app.post('/TESTAPI/unitTests', function(req, res) {
-    var framework = TestUsers();
+    var framework = new TestUsers();
     framework.setup();
     framework.testAdd1();
     framework.testAddExists();
