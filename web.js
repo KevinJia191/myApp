@@ -8,7 +8,7 @@ var async = require('async');
 
 function TestUsers(){
   //UnitTest!!!!
-  this.users = new UsersModel();
+  var users = new UsersModel();
   this.setup = setup;
   this.testAdd1=testAdd1;
   this.testAddExists=testAddExists;
