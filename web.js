@@ -218,6 +218,7 @@ app.post('users/add', function(req, res) {
     
     var model = new UsersModel();
     model.add(username, password, function(jsonObject) { 
+        console.log(jsonObject);
         res.end(JSON.stringify(jsonObject));    
     });
 });
@@ -233,6 +234,7 @@ app.post('users/login', function(req, res) {
     
     var model = new UsersModel();
     model.login(username, password, function(jsonObject){
+        console.log(jsonObject);
         res.set({'Content-Type': 'application/json'});
         var jsonObject2 = {};
         jsonObject2.password = password;
