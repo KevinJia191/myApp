@@ -96,9 +96,9 @@ function UsersModel(){
                 if(err) return console.error(err);
                 row_count = result.rows.length;
                 if (row_count<1) {
-		    if(callback){
-	                    callback(self.ERR_BAD_CREDENTIALS);
-		    }
+            if(callback){
+                        callback(self.ERR_BAD_CREDENTIALS);
+            }
                     //return UsersModel.ERR_BAD_CREDENTIALS;
                 }
                 console.log(result.rows[0].count);
@@ -107,9 +107,9 @@ function UsersModel(){
                 client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';', function(err, result) {
                     done();
                     if(err) return console.error(err);
-		    if(callback){
-	                    callback(row_count);
-		    }
+            if(callback){
+                        callback(row_count);
+            }
                     //return row_count;
                 });
             });
@@ -124,13 +124,14 @@ function UsersModel(){
     password: (string) the password
     */
     function add(user,password, callback){
+    var jsonObject = {};
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             if(user == ""){
                 console.log("got a username thats an empty string");
-                var resultingErrCode = self.ERR_BAD_USERNAME;
                 if(callback){
-			callback(resultingErrCode);
-		}
+            jsonObject.errCode = self.ERR_BAD_USERNAME;
+            callback(jsonObject);
+        }
                 //return this.ERR_BAD_USERNAME;
             }
             
@@ -141,19 +142,20 @@ function UsersModel(){
                 //console.log(result);
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
-                    var resultingErrCode = self.ERR_BAD_USER_EXISTS;
-		    if(callback){
-	                    callback(resultingErrCode);
-		    }
+
+            if(callback){
+                    jsonObject.errCode = self.ERR_BAD_USER_EXISTS:
+                        callback(jsonObject);
+            }
                     //return this.ERR_BAD_USER_EXISTS;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-                    var resultingErrCode = self.SUCCESS;
                     if(callback){
-		    	callback(resultingErrCode);
-		    }
+            jsonObject.errCode = self.SUCCESS;
+                callback(jsonObject);
+            }
                     //return this.SUCCESS;
                 }
             });
@@ -171,8 +173,8 @@ function UsersModel(){
                 done();
                 if(err) return console.error(err);
                 if(callback){
-			callback(self.SUCCESS);
-		}
+            callback(self.SUCCESS);
+        }
                 //return UsersModel.SUCCESS;
             });
         });
@@ -208,23 +210,26 @@ app.post('users/login', function(req, res) {
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN login";
     
     var model = new UsersModel();
-    var temp = model.add(username, password);
+    model.add(username, password, function(jsonObject) { 
+        jsonObject = { "errCode" : result}
+        res.send(JSON.stringify(jsonObject);    
+    });
     
     console.log("temp is " + temp);
     console.log("error code is " + model.ERR_BAD_USER_EXISTS);
     
     if(temp == model.ERR_BAD_USERNAME){
-	res.set({'Content-Type': 'application/json'})
+    res.set({'Content-Type': 'application/json'})
         res.write(body);
         res.end("yo your username is blank, :" + username);
     }
     if(temp == model.ERR_BAD_USER_EXISTS){
-	res.set({'Content-Type': 'application/json'})
+    res.set({'Content-Type': 'application/json'})
         res.write(body);
         res.end("We've seen you before," + username);
     }
     else{
-	res.set({'Content-Type': 'application/json'})
+    res.set({'Content-Type': 'application/json'})
         res.write(body);
         res.end("first time seeing you, " + username);
     }
@@ -242,7 +247,7 @@ app.post('users/add', function(req, res) {
     var model = new UsersModel();
     model.add(username, password, function(){
         console.log("added " + username + "," + password);
-	res.set({'Content-Type': 'application/json'})
+    res.set({'Content-Type': 'application/json'})
         res.end("Welcome, " + username);
     });
     
