@@ -172,9 +172,12 @@ function UsersModel(){
             client.query('DELETE from login_info', function(err, result) {
                 done();
                 if(err) return console.error(err);
+                
                 if(callback){
+                    jsonObject.errCode = self.SUCCESS;
                     callback(jsonObject);
                 }
+                
             });
         });
     }
@@ -236,6 +239,7 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
         res.end(JSON.stringify(jsonObject));
     });
 });
+
 app.post('/TESTAPI/unitTests', function(req, res) {
     var framework = new TestUsers();
     //framework.setup();
