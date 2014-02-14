@@ -100,6 +100,7 @@ function UsersModel(){
                     if(callback){
                         jsonObject.errCode = self.ERR_BAD_CREDENTIALS;
                         callback(jsonObject);
+                        return;
                     }
                     //return UsersModel.ERR_BAD_CREDENTIALS;
                 }
@@ -113,6 +114,7 @@ function UsersModel(){
                         jsonObject.errCode = self.SUCCESS;
                         jsonObject.count = row_count;
                         callback(jsonObject);
+                        return;
                     }
                     //return row_count;
                 });
@@ -131,10 +133,10 @@ function UsersModel(){
     var jsonObject = {};
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             if(user == ""){
-                console.log("got a username thats an empty string");
                 if(callback){
                     jsonObject.errCode = self.ERR_BAD_USERNAME;
                     callback(jsonObject);
+                    return;
                 }
             }
             
@@ -146,6 +148,7 @@ function UsersModel(){
                     if(callback){
                         jsonObject.errCode = self.ERR_BAD_USER_EXISTS;
                         callback(jsonObject);
+                        return;
                     }
                 }
                 else{
@@ -155,6 +158,7 @@ function UsersModel(){
                         jsonObject.errCode = self.SUCCESS;
                         jsonObject.count = 1;
                         callback(jsonObject);
+                        return;
                     }
                 }
             });
@@ -176,6 +180,7 @@ function UsersModel(){
                 if(callback){
                     jsonObject.errCode = self.SUCCESS;
                     callback(jsonObject);
+                    return;
                 }
                 
             });
