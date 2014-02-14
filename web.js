@@ -209,8 +209,8 @@ app.post('users/login', function(req, res) {
     var username = req.body.user;
     var password = req.body.password;
     
-    console.log("user="+username);
-    console.log("pass="+password);
+    console.log("user = "+username);
+    console.log("pass = "+password);
 
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN ADD ";
     
@@ -231,24 +231,22 @@ app.post('users/add', function(req, res) {
     var username = req.body.user;
     var password = req.body.password;
     
-    console.log("user="+username);
-    console.log("pass="+password);
+    console.log("user = "+username);
+    console.log("pass = "+password);
         
-    myUsers.add(username, password, function(jsonObject) { 
+    var model = new UsersModel();
+    model.add(username, password, function(jsonObject) { 
         console.log(jsonObject);
         res.set({'Content-Type': 'application/json'})
-        res.write(JSON.stringify(jsonObject));    
+        res.end(JSON.stringify(jsonObject));    
     });
-    
-    res.end();
     
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture(function(jsonObject){
         res.set({'Content-Type': 'application/json'})
-        res.write(JSON.stringify(jsonObject));
-        res.end();
+        res.end(JSON.stringify(jsonObject));
     });
 });
 
