@@ -205,6 +205,23 @@ app.get('/', function(req, res) {
   res.end('</form></body></html>');
 });
 
+app.post('users/add', function(req, res) {
+    var username = req.body.user;
+    var password = req.body.password;
+    
+    console.log("user = "+username);
+    console.log("pass = "+password);
+        
+    var model = new UsersModel();
+    model.add(username, password, function(jsonObject) { 
+        console.log(jsonObject);
+        res.set({'Content-Type': 'application/json'})
+        res.end(JSON.stringify(jsonObject)); 
+        return;
+    });
+    
+});
+
 app.post('users/login', function(req, res) {
     var username = req.body.user;
     var password = req.body.password;
@@ -223,22 +240,7 @@ app.post('users/login', function(req, res) {
         jsonObject2.user = username;
         console.log(jsonObject2);
         res.end(JSON.stringify(jsonObject2));
-    });
-    
-});
-
-app.post('users/add', function(req, res) {
-    var username = req.body.user;
-    var password = req.body.password;
-    
-    console.log("user = "+username);
-    console.log("pass = "+password);
-        
-    var model = new UsersModel();
-    model.add(username, password, function(jsonObject) { 
-        console.log(jsonObject);
-        res.set({'Content-Type': 'application/json'})
-        res.end(JSON.stringify(jsonObject));    
+        return;
     });
     
 });
@@ -247,6 +249,7 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture(function(jsonObject){
         res.set({'Content-Type': 'application/json'})
         res.end(JSON.stringify(jsonObject));
+        return;
     });
 });
 
@@ -264,6 +267,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     
     res.set({'Content-Type': 'application/json'})
     res.end(JSON.stringify(jsonObject));
+    return;
 });
 
 var port = Number(process.env.PORT || 5000);
