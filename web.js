@@ -69,6 +69,7 @@ function TestUsers(){
         function(){
             assert.equal(this.users.SUCCESS, temp);
             assert.equal(this.users.SUCCESS, temp2);
+            assert.equal(this.users.SUCCESS, temp-1); //should fail
             console.log("WE GOT IT");
         }
     ]);
