@@ -22,7 +22,7 @@ function TestUsers(){
   function testAdd1(){
     console.log("STARTING THE ADD1");
     resultValue = this.users.add("user1","password");
-    assert.equal(this.users.SUCCESS, resultValue);
+    return seriesAssertEuqal(this.users.SUCCESS, resultValue);
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
@@ -39,6 +39,10 @@ function TestUsers(){
   function testAddEmptyUsername(){
     console.log("STARTING THE TESTADDEMPTY");
     assert.equal(this.users.ERR_BAD_USERNAME, self.users.add("", "password"))
+  }
+  
+  function seriesAssertEqual(param1, param2){
+    assert.equal(param1, param2);
   }
 }
 
