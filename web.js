@@ -25,12 +25,15 @@ function TestUsers(){
         function(callback){
             var model = new UsersModel();
             temp = model.add("user1","password");
+            temp2 = users.add("user1","password");
             console.log(temp);
+            console.log(temp2);
             callback(); 
         },
         function(callback){
             var model = new UsersModel();
             console.log(temp);
+            console.log(temp2);
             assert.equal(model.SUCCESS, temp);
             console.log("Assert successful, ADD1");
             callback();
