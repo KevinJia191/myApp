@@ -237,17 +237,18 @@ app.post('users/add', function(req, res) {
     myUsers.add(username, password, function(jsonObject) { 
         console.log(jsonObject);
         res.set({'Content-Type': 'application/json'})
-        res.send(JSON.stringify(jsonObject));    
+        res.write(JSON.stringify(jsonObject));    
     });
     
-    res.end('hihi');
+    res.end();
     
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture(function(jsonObject){
         res.set({'Content-Type': 'application/json'})
-        res.end(JSON.stringify(jsonObject));
+        res.write(JSON.stringify(jsonObject));
+        res.end();
     });
 });
 
