@@ -13,29 +13,26 @@ function TestUsers(){
   this.testAddExists=testAddExists;
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
-  this.assertThemAll = assertThemAll;
-  var resultValue = [];
-  var answerValue = [];
-  var index = 0;
+  
   function setup(){
     this.users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
   }
   function testAdd1(){
     console.log("STARTING THE ADD1");
-    resultValue[index] = this.users.add("user1","password");
-    answerValue[index] = this.users.SUCCESS;
-    index++;
+    async.series([
+        function(){
+            var temp = this.users.add("user1","password");
+        },
+        function(){
+            assert.equal(this.users.SUCCESS, temp);
+        }
+    ]);
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
-    resultValue[index] = this.users.add("user1","password")
-    answerValue[index] = this.users.SUCCESS;
-    index++;
-    
-    resultValue[index] = this.users.add("user1","password")
-    answerValue[index] = this.users.ERR_USER_EXISTS;
-    index++;
+    assert.equal(this.users.SUCCESS,this.users.add("user1","password"));
+    assert.equal(this.users.ERR_USER_EXISTS,this.users.add("user1","password"));
   }
   
   function testAdd2(){
@@ -47,17 +44,6 @@ function TestUsers(){
   function testAddEmptyUsername(){
     console.log("STARTING THE TESTADDEMPTY");
     assert.equal(this.users.ERR_BAD_USERNAME, self.users.add("", "password"))
-  }
-  
-  function assertThemAll(){
-    for(var i = 0; i<resultValue.length; i++){
-        if(assert.equal(resultValue[i], answerValue[i])){
-            console.log("test + " +i+ "passed");
-        }
-        else{
-            console.log("FAAAAAAAAILED");
-        }
-    }
   }
 }
 
@@ -233,9 +219,8 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     framework.setup();
     framework.testAdd1();
     framework.testAddExists();
-    //framework.testAdd2();
-    //framework.testAddEmptyUsername();
-    framework.assertThemAll();
+    framework.testAdd2();
+    framework.testAddEmptyUsername();
     res.end("end unit tests");
 });
 
