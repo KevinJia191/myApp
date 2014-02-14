@@ -214,17 +214,17 @@ app.post('users/login', function(req, res) {
     console.log("error code is " + model.ERR_BAD_USER_EXISTS);
     
     if(temp == model.ERR_BAD_USERNAME){
-	res.set({'Content-Type': 'text/plain'})
+	res.set({'Content-Type': 'application/json'})
         res.write(body);
         res.end("yo your username is blank, :" + username);
     }
     if(temp == model.ERR_BAD_USER_EXISTS){
-	res.set({'Content-Type': 'text/plain'})
+	res.set({'Content-Type': 'application/json'})
         res.write(body);
         res.end("We've seen you before," + username);
     }
     else{
-	res.set({'Content-Type': 'text/plain'})
+	res.set({'Content-Type': 'application/json'})
         res.write(body);
         res.end("first time seeing you, " + username);
     }
@@ -242,7 +242,7 @@ app.post('users/add', function(req, res) {
     var model = new UsersModel();
     model.add(username, password, function(){
         console.log("added " + username + "," + password);
-	res.set({'Content-Type': 'text/plain'})
+	res.set({'Content-Type': 'application/json'})
         res.end("Welcome, " + username);
     });
     
@@ -250,7 +250,7 @@ app.post('users/add', function(req, res) {
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture();
-    res.set({'Content-Type': 'text/plain'})
+    res.set({'Content-Type': 'application/json'})
     res.end("resetFixtured");
 });
 app.post('/TESTAPI/unitTests', function(req, res) {
@@ -260,7 +260,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     framework.testAddExists();
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
-    res.set({'Content-Type': 'text/plain'})
+    res.set({'Content-Type': 'application/json'})
     res.end("end unit tests");
 });
 
