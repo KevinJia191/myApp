@@ -234,13 +234,19 @@ app.post('users/add', function(req, res) {
     console.log("pass="+password);
     
     res.set({'Content-Type': 'application/json'})
-    
+    /*
     var model = new UsersModel();
     model.add(username, password, function(jsonObject) { 
         console.log(jsonObject);
         res.send(JSON.stringify(jsonObject));    
     });
+    */
+    var temp = {};
+    temp.user = username;
+    temp.password = password;
+    res.send(JSON.stringify(temp));
     res.end('hihi');
+    
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
