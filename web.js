@@ -111,7 +111,7 @@ function UsersModel(){
                     if(err) return console.error(err);
                     if(callback){
                         jsonObject.errCode = self.SUCCESS;
-                        jsonObject.loginCount = row_count;
+                        jsonObject.count = row_count;
                         callback(jsonObject);
                     }
                     //return row_count;
@@ -133,9 +133,9 @@ function UsersModel(){
             if(user == ""){
                 console.log("got a username thats an empty string");
                 if(callback){
-            jsonObject.errCode = self.ERR_BAD_USERNAME;
-            callback(jsonObject);
-        }
+                    jsonObject.errCode = self.ERR_BAD_USERNAME;
+                    callback(jsonObject);
+                }
                 //return this.ERR_BAD_USERNAME;
             }
             
@@ -143,23 +143,23 @@ function UsersModel(){
             client.query('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';', function(err, result){
                 done();
                 if(err) return console.error(err);
-                //console.log(result);
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
 
-            if(callback){
-                    jsonObject.errCode = self.ERR_BAD_USER_EXISTS;
+                    if(callback){
+                        jsonObject.errCode = self.ERR_BAD_USER_EXISTS;
                         callback(jsonObject);
-            }
+                    }
                     //return this.ERR_BAD_USER_EXISTS;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     if(callback){
-            jsonObject.errCode = self.SUCCESS;
-                callback(jsonObject);
-            }
+                        jsonObject.errCode = self.SUCCESS;
+                        jsonObject.count = 1;
+                        callback(jsonObject);
+                    }
                     //return this.SUCCESS;
                 }
             });
@@ -232,8 +232,8 @@ app.post('users/login', function(req, res) {
     
     var model = new UsersModel();
     model.login(username, password, function(jsonObject){
-        res.send(JSON.stringify(jsonObject));
         res.set({'Content-Type': 'application/json'});
+        res.send(JSON.stringify(jsonObject));
         res.end("Welcome, " + username);
     });
     
