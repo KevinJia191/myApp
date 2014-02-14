@@ -221,6 +221,7 @@ app.post('users/login', function(req, res) {
         var jsonObject2 = {};
         jsonObject2.password = password;
         jsonObject2.user = username;
+        console.log(jsonObject2);
         res.end(JSON.stringify(jsonObject2));
     });
     
@@ -232,19 +233,13 @@ app.post('users/add', function(req, res) {
     
     console.log("user="+username);
     console.log("pass="+password);
-    
-    res.set({'Content-Type': 'application/json'})
-    /*
-    var model = new UsersModel();
-    model.add(username, password, function(jsonObject) { 
+        
+    myUsers.add(username, password, function(jsonObject) { 
         console.log(jsonObject);
+        res.set({'Content-Type': 'application/json'})
         res.send(JSON.stringify(jsonObject));    
     });
-    */
-    var temp = {};
-    temp.user = username;
-    temp.password = password;
-    res.send(JSON.stringify(temp));
+    
     res.end('hihi');
     
 });
