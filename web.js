@@ -240,7 +240,7 @@ app.post('users/add', function(req, res) {
         console.log(jsonObject);
         res.send(JSON.stringify(jsonObject));    
     });
-    res.end("");
+    res.end('hihi');
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
