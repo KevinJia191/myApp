@@ -206,7 +206,7 @@ app.post('users/add', function(req, res) {
 app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture();
     res.end("resetFixtured");
-};
+});
 app.post('/TESTAPI/unitTests', function(req, res) {
     var framework = TestUsers();
     framework.setup();
@@ -215,7 +215,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     framework.testAdd2();
     framework.testAddEmptyUsername();
     res.end("end unit tests");
-};
+});
 
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
