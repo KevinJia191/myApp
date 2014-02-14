@@ -8,7 +8,6 @@ var async = require('async');
 
 function TestUsers(){
   //UnitTest!!!!
-  var users = new UsersModel();
   this.setup = setup;
   this.testAdd1=testAdd1;
   this.testAddExists=testAddExists;
@@ -22,7 +21,7 @@ function TestUsers(){
   function testAdd1(){
     var model = new UsersModel();
     model.add("user1", "pass1", function(resultingErrCode){
-        assert.equal(users.SUCCESS, resultingErrCode);
+        assert.equal(model.SUCCESS, resultingErrCode);
     });
   }
   function testAddExists(){
@@ -86,13 +85,13 @@ function TestUsers(){
 
 function UsersModel(){
     
-    var ERR_BAD_CREDENTIALS = -1;
-    var ERR_BAD_USER_EXISTS = -2;
-    var ERR_BAD_USERNAME = -3;
-    var ERR_BAD_PASSWORD = -4;
-    var MAX_PASSWORD_LENGTH = 128;
-    var MAX_USERNAME_LENGTH = 128;
-    var SUCCESS = 1;
+    this.ERR_BAD_CREDENTIALS = -1;
+    this.ERR_BAD_USER_EXISTS = -2;
+    this.ERR_BAD_USERNAME = -3;
+    this.ERR_BAD_PASSWORD = -4;
+    this.MAX_PASSWORD_LENGTH = 128;
+    this.MAX_USERNAME_LENGTH = 128;
+    this.SUCCESS = 1;
     this.login = login;
     this.add = add;
     this.TESTAPI_resetFixture = TESTAPI_resetFixture;
@@ -132,7 +131,7 @@ function UsersModel(){
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             if(user == ""){
                 console.log("got a username thats an empty string");
-                var resultingErrCode = ERR_BAD_USERNAME;
+                var resultingErrCode = UsersModel.ERR_BAD_USERNAME;
                 callback(resultingErrCode);
                 //return this.ERR_BAD_USERNAME;
             }
@@ -144,14 +143,14 @@ function UsersModel(){
                 //console.log(result);
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
-                    var resultingErrCode = ERR_BAD_USER_EXISTS;
+                    var resultingErrCode = UsersModel.ERR_BAD_USER_EXISTS;
                     callback(resultingErrCode);
                     //return this.ERR_BAD_USER_EXISTS;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-                    var resultingErrCode = SUCCESS;
+                    var resultingErrCode = UsersModel.SUCCESS;
                     callback(resultingErrCode);
                     //return this.SUCCESS;
                 }
