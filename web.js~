@@ -187,7 +187,7 @@ app.get('/', function(req, res) {
 app.post('users/login', function(req, res) {
     
     
-    var username = req.body.user;
+    var username = req.body.username;
     var password = req.body.password;
     
     console.log("user="+username);
