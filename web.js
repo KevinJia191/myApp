@@ -23,31 +23,20 @@ function TestUsers(){
     model.TESTAPI_resetFixture();
     model.add("user1", "pass1", function(resultingErrCode){
         assert.equal(model.SUCCESS, resultingErrCode);
+        console.log("testAdd1 assertion complete");
     });
   }
   function testAddExists(){
-    console.log("STARTING THE ADDEXISTS");
-    async.series([
-        function(){
-            var model = new UsersModel();
-            temp = model.add("user1", "password");
-        },
-        function(){
-            assert.equal(this.users.SUCCESS, temp);
-            
-        },
-        function(){
-            var model = new UsersModel();
-            model.add("user1", "password");
-            temp = model.add("user1", "password");
-        },
-        function(){
-            assert.equal(this.users.ERR_USER_EXISTS,temp);
-            console.log("Assert successful, ADDEXISTS");
-
-        }
-    ]);
-    console.log("FINISHING ADDEXISTS");
+    var model = new UsersModel();
+    model.TESTAPI_resetFixture();
+    model.add("user1", "pass1", function(resultingErrCode){
+        assert.equal(model.SUCCESS, resultingErrCode);
+        console.log("testAddExists1 assertion complete");
+        model.add("user1", "pass1", function(resultingErrCode2){
+            assert.equal(model.ERR_BAD_USER_EXISTS, resultingErrCode2);
+            console.log("testAddExists1 assertion complete");
+        });
+    });
   }
   
   function testAdd2(){
@@ -98,7 +87,7 @@ function UsersModel(){
     this.TESTAPI_resetFixture = TESTAPI_resetFixture;
 
     var hit_count=0;
-    function login(user,password){
+    function login(user,password, callback){
         var row_count = 0;
         var update_query;
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -107,7 +96,8 @@ function UsersModel(){
                 if(err) return console.error(err);
                 row_count = result.rows.length;
                 if (row_count<1) {
-                    return UsersModel.ERR_BAD_CREDENTIALS;
+                    callback(self.ERR_BAD_CREDENTIALS);
+                    //return UsersModel.ERR_BAD_CREDENTIALS;
                 }
                 console.log(result.rows[0].count);
                 console.log("hit_count is %d",hit_count);
@@ -115,7 +105,8 @@ function UsersModel(){
                 client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';', function(err, result) {
                     done();
                     if(err) return console.error(err);
-                    return row_count;
+                    callback(row_count);
+                    //return row_count;
                 });
             });
         });
@@ -144,7 +135,6 @@ function UsersModel(){
                 //console.log(result);
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
-                    console.log("blahblah" + self.ERR_BAD_USER_EXISTS);
                     var resultingErrCode = self.ERR_BAD_USER_EXISTS;
                     callback(resultingErrCode);
                     //return this.ERR_BAD_USER_EXISTS;
@@ -165,12 +155,13 @@ function UsersModel(){
     This function tests our api UNIT TESTS
     deletes all entries from login info table
     */
-    function TESTAPI_resetFixture(){
+    function TESTAPI_resetFixture(callback){
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('DELETE from login_info', function(err, result) {
                 done();
                 if(err) return console.error(err);
-                return UsersModel.SUCCESS;
+                callback(self.SUCCESS);
+                //return UsersModel.SUCCESS;
             });
         });
     }
@@ -248,8 +239,8 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
 app.post('/TESTAPI/unitTests', function(req, res) {
     var framework = new TestUsers();
     //framework.setup();
-    framework.testAdd1();
-    //framework.testAddExists();
+    //framework.testAdd1();
+    framework.testAddExists();
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
     res.end("end unit tests");
