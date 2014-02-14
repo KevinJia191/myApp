@@ -211,6 +211,7 @@ app.post('users/add', function(req, res) {
     
     console.log("user="+username);
     console.log("pass="+password);
+    
     res.set({'Content-Type': 'application/json'})
 
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN login";
@@ -233,7 +234,10 @@ app.post('users/login', function(req, res) {
     var model = new UsersModel();
     model.login(username, password, function(jsonObject){
         res.set({'Content-Type': 'application/json'});
-        res.end(JSON.stringify(jsonObject));
+        var jsonObject2 = {};
+        jsonObject2.password = password;
+        jsonObject2.user = username;
+        res.end(JSON.stringify(jsonObject2));
     });
     
 });
