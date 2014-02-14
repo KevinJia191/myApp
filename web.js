@@ -28,6 +28,8 @@ function TestUsers(){
         },
         function(){
             assert.equal(this.users.SUCCESS, temp);
+                        console.log("WE GOT IT");
+
         }
     ]);
   }
@@ -49,6 +51,8 @@ function TestUsers(){
         },
         function(){
             assert.equal(this.users.ERR_USER_EXISTS,temp);
+                        console.log("WE GOT IT");
+
         }
     ]);
   }
@@ -61,9 +65,10 @@ function TestUsers(){
             temp = model.add("user1", "password");
             temp2 = model.add("user2","password");
         },
-        functionn(){
+        function(){
             assert.equal(this.users.SUCCESS, temp);
             assert.equal(this.users.SUCCESS, temp2);
+            console.log("WE GOT IT");
         }
   }
 
