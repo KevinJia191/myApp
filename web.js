@@ -14,7 +14,7 @@ function TestUsers(){
   this.testAddExists=testAddExists;
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
-  var temp, temp2;
+  var temp, temp2="9";
   function setup(){
     this.users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
