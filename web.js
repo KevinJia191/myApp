@@ -138,7 +138,7 @@ app.get('/', function(req, res) {
   var body="";
   res.writeHead(200);
   res.write('<html><body>'+body+'<br>');
-  res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="resetFixture" onclick=this.form.action="TESTAPI/resetFixture"><input type="submit" value="add" onclick=this.form.action="users/add"><input type="submit" value="unitTests onclick=this.form.action="TESTAPI/unitTests">');
+  res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/add"><input type="submit" value="resetFixture" onclick=this.form.action="TESTAPI/resetFixture"><input type="submit" value="unitTests" onclick=this.form.action="TESTAPI/unitTests">');
   res.end('</form></body></html>');
 });
 
