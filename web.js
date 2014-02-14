@@ -259,6 +259,10 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
     var jsonObject = {};
+    jsonObject.nrFailed = 0;
+    jsonObject.output = "hi";
+    jsonObject.totalTests = 5;
+    
     res.set({'Content-Type': 'application/json'})
     res.end(JSON.stringify(jsonObject));
 });
