@@ -28,10 +28,10 @@ function TestUsers(){
         },
         function(){
             assert.equal(this.users.SUCCESS, temp);
-                        console.log("WE GOT IT");
-
+            console.log("WE GOT IT");
         }
     ]);
+    console.log("FINISHING ADD1");
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
@@ -51,10 +51,11 @@ function TestUsers(){
         },
         function(){
             assert.equal(this.users.ERR_USER_EXISTS,temp);
-                        console.log("WE GOT IT");
+            console.log("WE GOT IT");
 
         }
     ]);
+    console.log("FINISHING ADDEXISTS");
   }
   
   function testAdd2(){
@@ -71,11 +72,12 @@ function TestUsers(){
             console.log("WE GOT IT");
         }
     ]);
+    console.log("FINISHING ADD2");
   }
 
   function testAddEmptyUsername(){
     console.log("STARTING THE TESTADDEMPTY");
-    assert.equal(this.users.ERR_BAD_USERNAME, self.users.add("", "password"))
+    assert.equal(this.users.ERR_BAD_USERNAME, this.users.add("", "password"))
   }
 }
 
@@ -252,7 +254,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     framework.testAdd1();
     framework.testAddExists();
     framework.testAdd2();
-    framework.testAddEmptyUsername();
+    //framework.testAddEmptyUsername();
     res.end("end unit tests");
 });
 
