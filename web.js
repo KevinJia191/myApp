@@ -14,7 +14,7 @@ function TestUsers(){
   this.testAddExists=testAddExists;
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
-  
+  var temp;
   function setup(){
     this.users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
@@ -23,7 +23,7 @@ function TestUsers(){
     console.log("STARTING THE ADD1");
     async.series([
         function(){
-            var temp = this.users.add("user1","password");
+            temp = UsersModel.add("user1","password");
         },
         function(){
             assert.equal(this.users.SUCCESS, temp);
