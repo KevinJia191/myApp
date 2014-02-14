@@ -96,7 +96,9 @@ function UsersModel(){
                 if(err) return console.error(err);
                 row_count = result.rows.length;
                 if (row_count<1) {
-                    callback(self.ERR_BAD_CREDENTIALS);
+		    if(callback){
+	                    callback(self.ERR_BAD_CREDENTIALS);
+		    }
                     //return UsersModel.ERR_BAD_CREDENTIALS;
                 }
                 console.log(result.rows[0].count);
@@ -105,7 +107,9 @@ function UsersModel(){
                 client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';', function(err, result) {
                     done();
                     if(err) return console.error(err);
-                    callback(row_count);
+		    if(callback){
+	                    callback(row_count);
+		    }
                     //return row_count;
                 });
             });
@@ -124,7 +128,9 @@ function UsersModel(){
             if(user == ""){
                 console.log("got a username thats an empty string");
                 var resultingErrCode = self.ERR_BAD_USERNAME;
-                callback(resultingErrCode);
+                if(callback){
+			callback(resultingErrCode);
+		}
                 //return this.ERR_BAD_USERNAME;
             }
             
@@ -136,14 +142,18 @@ function UsersModel(){
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
                     var resultingErrCode = self.ERR_BAD_USER_EXISTS;
-                    callback(resultingErrCode);
+		    if(callback){
+	                    callback(resultingErrCode);
+		    }
                     //return this.ERR_BAD_USER_EXISTS;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     var resultingErrCode = self.SUCCESS;
-                    callback(resultingErrCode);
+                    if(callback){
+		    	callback(resultingErrCode);
+		    }
                     //return this.SUCCESS;
                 }
             });
@@ -160,7 +170,9 @@ function UsersModel(){
             client.query('DELETE from login_info', function(err, result) {
                 done();
                 if(err) return console.error(err);
-                callback(self.SUCCESS);
+                if(callback){
+			callback(self.SUCCESS);
+		}
                 //return UsersModel.SUCCESS;
             });
         });
@@ -202,14 +214,17 @@ app.post('users/login', function(req, res) {
     console.log("error code is " + model.ERR_BAD_USER_EXISTS);
     
     if(temp == model.ERR_BAD_USERNAME){
+	res.set({'Content-Type': 'text/plain'})
         res.write(body);
         res.end("yo your username is blank, :" + username);
     }
     if(temp == model.ERR_BAD_USER_EXISTS){
+	res.set({'Content-Type': 'text/plain'})
         res.write(body);
         res.end("We've seen you before," + username);
     }
     else{
+	res.set({'Content-Type': 'text/plain'})
         res.write(body);
         res.end("first time seeing you, " + username);
     }
@@ -227,6 +242,7 @@ app.post('users/add', function(req, res) {
     var model = new UsersModel();
     model.add(username, password, function(){
         console.log("added " + username + "," + password);
+	res.set({'Content-Type': 'text/plain'})
         res.end("Welcome, " + username);
     });
     
@@ -234,6 +250,7 @@ app.post('users/add', function(req, res) {
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture();
+    res.set({'Content-Type': 'text/plain'})
     res.end("resetFixtured");
 });
 app.post('/TESTAPI/unitTests', function(req, res) {
@@ -243,6 +260,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     framework.testAddExists();
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
+    res.set({'Content-Type': 'text/plain'})
     res.end("end unit tests");
 });
 
