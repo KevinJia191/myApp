@@ -7,7 +7,6 @@ var myUsers = new UsersModel();
 var async = require('async');
 
 function TestUsers(){
-  //UnitTest!!!!
   this.setup = setup;
   this.testAdd1=testAdd1;
   this.testAddExists=testAddExists;
@@ -69,7 +68,6 @@ function TestUsers(){
         }
     ]);
     console.log("FINISHING TESTADDEMPTY");
-
   }
 }
 
@@ -98,7 +96,7 @@ function UsersModel(){
                 row_count = result.rows.length;
                 if (row_count<1) {
                     if(callback){
-                        jsonObject.errCode = self.ERR_BAD_CREDENTIALS;
+                        jsonObject = {'errCode' : self.ERR_BAD_CREDENTIALS};
                         callback(jsonObject);
                         return;
                     }
@@ -111,8 +109,7 @@ function UsersModel(){
                     done();
                     if(err) return console.error(err);
                     if(callback){
-                        jsonObject.errCode = self.SUCCESS;
-                        jsonObject.count = row_count;
+                        jsonObject = {'errCode' : self.SUCCESS, 'count' : row_count};
                         callback(jsonObject);
                         return;
                     }
@@ -130,23 +127,22 @@ function UsersModel(){
     password: (string) the password
     */
     function add(user,password, callback){
-        var jsonObject = {};
+        var jsonObject;
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             if(user == ""){
                 if(callback){
-                    jsonObject.errCode = self.ERR_BAD_USERNAME;
+                    jsonObject = {'errCode' : self.ERR_BAD_USERNAME};
                     callback(jsonObject);
                     return;
                 }
             }
-            
             console.log('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';');
             client.query('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';', function(err, result){
                 done();
                 if(err) return console.error(err);
                 if(result.rows.length > 0){
                     if(callback){
-                        jsonObject.errCode = self.ERR_BAD_USER_EXISTS;
+                        jsonObject ={'errCode' : self.ERR_BAD_USER_EXISTS};
                         callback(jsonObject);
                         return;
                     }
@@ -155,8 +151,7 @@ function UsersModel(){
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     if(callback){
-                        jsonObject.errCode = self.SUCCESS;
-                        jsonObject.count = 1;
+                        jsonObject ={'errCode' : self.SUCCESS, count : 1};
                         callback(jsonObject);
                         return;
                     }
@@ -171,14 +166,14 @@ function UsersModel(){
     deletes all entries from login info table
     */
     function TESTAPI_resetFixture(callback){
-        var jsonObject = {};
+        var jsonObject;
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('DELETE from login_info', function(err, result) {
                 done();
                 if(err) return console.error(err);
                 
                 if(callback){
-                    jsonObject.errCode = self.SUCCESS;
+                    jsonObject = {'errCode' : self.SUCCESS};
                     callback(jsonObject);
                     return;
                 }
@@ -211,8 +206,7 @@ app.post('users/add', function(req, res) {
     
     console.log("user = "+username);
     console.log("pass = "+password);
-    res.end("");
-    /*
+    
     var model = new UsersModel();
     model.add(username, password, function(jsonObject) { 
         console.log(jsonObject);
@@ -220,7 +214,7 @@ app.post('users/add', function(req, res) {
         res.end(JSON.stringify(jsonObject)); 
         return;
     });
-    */
+    
 });
 
 app.post('users/login', function(req, res) {
