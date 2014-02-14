@@ -22,8 +22,8 @@ function TestUsers(){
   function testAdd1(callback){
     console.log("STARTING THE ADD1");
     var model = new UsersModel();
-    temp = model.add("user1","password");
-    callback(temp);
+    var temp3 = model.add("user1","password");
+    callback(temp3);
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
