@@ -13,7 +13,7 @@ function TestUsers(){
   this.testAddExists=testAddExists;
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
-  this.seriesAssertEqual = seriesAssertEqual;
+  this.assertThemAll = assertThemAll;
   var resultValue = [];
   var answerValue = [];
   var index = 0;
