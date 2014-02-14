@@ -24,6 +24,8 @@ function TestUsers(){
     async.series([
         function(callback){
             var model = new UsersModel();
+            console.log(temp);
+            console.log(temp2);
             temp = model.add("user1","password");
             temp2 = users.add("user1","password");
             console.log(temp);
