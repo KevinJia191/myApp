@@ -261,7 +261,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     var jsonObject = {};
     jsonObject.nrFailed = 0;
     jsonObject.output = "hi";
-    jsonObject.totalTests = 5;
+    jsonObject.totalTests = 10;
     
     res.set({'Content-Type': 'application/json'})
     res.end(JSON.stringify(jsonObject));
