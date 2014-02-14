@@ -20,6 +20,7 @@ function TestUsers(){
   }
   function testAdd1(){
     var model = new UsersModel();
+    model.TESTAPI_resetFixture();
     model.add("user1", "pass1", function(resultingErrCode){
         assert.equal(model.SUCCESS, resultingErrCode);
     });
