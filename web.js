@@ -136,7 +136,6 @@ function UsersModel(){
                     jsonObject.errCode = self.ERR_BAD_USERNAME;
                     callback(jsonObject);
                 }
-                //return this.ERR_BAD_USERNAME;
             }
             
             console.log('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';');
@@ -144,13 +143,10 @@ function UsersModel(){
                 done();
                 if(err) return console.error(err);
                 if(result.rows.length > 0){
-                    console.log("tried to add already existing user");
-
                     if(callback){
                         jsonObject.errCode = self.ERR_BAD_USER_EXISTS;
                         callback(jsonObject);
                     }
-                    //return this.ERR_BAD_USER_EXISTS;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
@@ -160,7 +156,6 @@ function UsersModel(){
                         jsonObject.count = 1;
                         callback(jsonObject);
                     }
-                    //return this.SUCCESS;
                 }
             });
             
@@ -172,14 +167,14 @@ function UsersModel(){
     deletes all entries from login info table
     */
     function TESTAPI_resetFixture(callback){
+        var jsonObject = {};
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('DELETE from login_info', function(err, result) {
                 done();
                 if(err) return console.error(err);
                 if(callback){
-            callback(self.SUCCESS);
-        }
-                //return UsersModel.SUCCESS;
+                    callback(jsonObject);
+                }
             });
         });
     }
@@ -240,9 +235,11 @@ app.post('users/login', function(req, res) {
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
-    myUsers.TESTAPI_resetFixture();
-    res.set({'Content-Type': 'application/json'})
-    res.end("resetFixtured");
+    myUsers.TESTAPI_resetFixture(function(jsonObject){
+        res.set({'Content-Type': 'application/json'})
+        res.send(JSON.stringify(jsonObject));
+        res.end("resetFixtured");
+    });
 });
 app.post('/TESTAPI/unitTests', function(req, res) {
     var framework = new TestUsers();
