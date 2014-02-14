@@ -130,7 +130,7 @@ function UsersModel(){
     password: (string) the password
     */
     function add(user,password, callback){
-    var jsonObject = {};
+        var jsonObject = {};
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             if(user == ""){
                 if(callback){
@@ -205,24 +205,6 @@ app.get('/', function(req, res) {
   res.end('</form></body></html>');
 });
 
-app.post('users/add', function(req, res) {
-    var username = req.body.user;
-    var password = req.body.password;
-    
-    console.log("user="+username);
-    console.log("pass="+password);
-    
-    res.set({'Content-Type': 'application/json'})
-
-    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN login";
-    
-    var model = new UsersModel();
-    model.add(username, password, function(jsonObject) { 
-        console.log(jsonObject);
-        res.end(JSON.stringify(jsonObject));    
-    });
-});
-
 app.post('users/login', function(req, res) {
     var username = req.body.user;
     var password = req.body.password;
@@ -242,6 +224,23 @@ app.post('users/login', function(req, res) {
         res.end(JSON.stringify(jsonObject2));
     });
     
+});
+
+app.post('users/add', function(req, res) {
+    var username = req.body.user;
+    var password = req.body.password;
+    
+    console.log("user="+username);
+    console.log("pass="+password);
+    
+    res.set({'Content-Type': 'application/json'})
+    
+    var model = new UsersModel();
+    model.add(username, password, function(jsonObject) { 
+        console.log(jsonObject);
+        res.send(JSON.stringify(jsonObject));    
+    });
+    res.end("");
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
