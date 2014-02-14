@@ -13,14 +13,16 @@ function TestUsers(){
   this.testAddExists=testAddExists;
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
-
+  var resultValue;
+  
   function setup(){
     this.users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
   }
   function testAdd1(){
     console.log("STARTING THE ADD1");
-    assert.equal(this.users.SUCCESS,this.users.add("user1","password"));
+    resultValue = this.users.add("user1","password");
+    assert.equal(this.users.SUCCESS, resultValue);
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
@@ -61,7 +63,6 @@ function UsersModel(){
             var query = client.query('Select * from login_info where username=\''+user+'\' AND password=\''+password+'\';', function(err, result) {
                 done();
                 if(err) return console.error(err);
-                console.log("rows length is "+result.rows.length);
                 row_count = result.rows.length;
                 if (row_count<1) {
                     return UsersModel.ERR_BAD_CREDENTIALS;
@@ -96,7 +97,7 @@ function UsersModel(){
             client.query('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';', function(err, result){
                 done();
                 if(err) return console.error(err);
-                console.log(result);
+                //console.log(result);
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
                     return this.ERR_BAD_USER_EXISTS;
