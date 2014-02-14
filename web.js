@@ -19,11 +19,21 @@ function TestUsers(){
     this.users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
   }
-  function testAdd1(callback){
+  function testAdd1(){
     console.log("STARTING THE ADD1");
-    var model = new UsersModel();
-    var temp3 = model.add("user1","password");
-    callback(temp3);
+    async.series([
+        function(callback){
+            var model = new UsersModel();
+            temp = model.add("user1","password");
+            callback(); 
+        },
+        function(callback){
+            assert.equal(this.users.SUCCESS, temp);
+            console.log("Assert successful, ADD1");
+            callback();
+        }
+    ]);
+    console.log("FINISHING ADD1");
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
@@ -251,15 +261,10 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture();
     res.end("resetFixtured");
 });
-
 app.post('/TESTAPI/unitTests', function(req, res) {
     var framework = new TestUsers();
-    var model = new UsersModel();
     framework.setup();
-    framework.testAdd1(function(result){
-        assert.equal(model.SUCCESS, result);
-        console.log("testadd1 is good");
-    });
+    framework.testAdd1();
     //framework.testAddExists();
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
