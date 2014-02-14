@@ -245,9 +245,11 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     var framework = new TestUsers();
     //framework.setup();
     //framework.testAdd1();
-    framework.testAddExists();
+    //framework.testAddExists();
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
+    var jsonObject = {};
+    res.send(JSON.stringify(jsonObject));
     res.set({'Content-Type': 'application/json'})
     res.end("end unit tests");
 });
