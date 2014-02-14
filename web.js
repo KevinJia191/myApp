@@ -203,17 +203,14 @@ app.post('users/add', function(req, res) {
     
     console.log("user="+username);
     console.log("pass="+password);
+    res.set({'Content-Type': 'application/json'})
 
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN login";
     
     var model = new UsersModel();
     model.add(username, password, function(jsonObject) { 
-        res.send(JSON.stringify(jsonObject));    
+        res.end(JSON.stringify(jsonObject));    
     });
-   
-    res.set({'Content-Type': 'application/json'})
-    res.write(body);
-    res.end("first time seeing you, " + username);
 });
 
 app.post('users/login', function(req, res) {
@@ -228,8 +225,7 @@ app.post('users/login', function(req, res) {
     var model = new UsersModel();
     model.login(username, password, function(jsonObject){
         res.set({'Content-Type': 'application/json'});
-        res.send(JSON.stringify(jsonObject));
-        res.end("Welcome, " + username);
+        res.end(JSON.stringify(jsonObject));
     });
     
 });
@@ -237,8 +233,7 @@ app.post('users/login', function(req, res) {
 app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture(function(jsonObject){
         res.set({'Content-Type': 'application/json'})
-        res.send(JSON.stringify(jsonObject));
-        res.end("resetFixtured");
+        res.end(JSON.stringify(jsonObject));
     });
 });
 app.post('/TESTAPI/unitTests', function(req, res) {
@@ -249,9 +244,8 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
     var jsonObject = {};
-    res.send(JSON.stringify(jsonObject));
     res.set({'Content-Type': 'application/json'})
-    res.end("end unit tests");
+    res.end(JSON.stringify(jsonObject));
 });
 
 var port = Number(process.env.PORT || 5000);
