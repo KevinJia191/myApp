@@ -19,16 +19,11 @@ function TestUsers(){
     this.users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
   }
-  function testAdd1(){
+  function testAdd1(callback){
     console.log("STARTING THE ADD1");
-    async.series([
-        function(callback){
-            var model = new UsersModel();
-            temp = model.add("user1","password");
-            callback(temp);
-        }
-    ]);
-    console.log("FINISHING ADD1");
+    var model = new UsersModel();
+    temp = model.add("user1","password");
+    callback(temp);
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
