@@ -14,7 +14,7 @@ function TestUsers(){
   this.testAddExists=testAddExists;
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
-  var temp;
+  var temp, temp2;
   function setup(){
     this.users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
@@ -33,14 +33,36 @@ function TestUsers(){
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
-    assert.equal(this.users.SUCCESS,this.users.add("user1","password"));
-    assert.equal(this.users.ERR_USER_EXISTS,this.users.add("user1","password"));
+    async.series([
+        function(){
+            var model = new UsersModel();
+            temp = model.add("user1", "password");
+        },
+        function(){
+            assert.equal(this.users.SUCCESS, temp);
+            
+        },
+        function(){
+            temp = model.add("user1", "password");
+        }
+        function(){
+            assert.equal(this.users.ERR_USER_EXISTS,temp);
+        }
+    ]);
   }
   
   function testAdd2(){
     console.log("STARTING THE ADD2");
-    assert.equal(this.users.SUCCESS,this.users.add("user1","password"));
-    assert.equal(this.users.SUCCESS,this.users.add("user2","password"));
+    async.series([
+        function(){
+            var model = new UsersModel();
+            temp = model.add("user1", "password");
+            temp2 = model.add("user2","password");
+        },
+        functionn(){
+            assert.equal(this.users.SUCCESS, temp);
+            assert.equal(this.users.SUCCESS, temp2);
+        }
   }
 
   function testAddEmptyUsername(){
