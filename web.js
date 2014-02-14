@@ -144,7 +144,7 @@ function UsersModel(){
                     console.log("tried to add already existing user");
 
             if(callback){
-                    jsonObject.errCode = self.ERR_BAD_USER_EXISTS:
+                    jsonObject.errCode = self.ERR_BAD_USER_EXISTS;
                         callback(jsonObject);
             }
                     //return this.ERR_BAD_USER_EXISTS;
