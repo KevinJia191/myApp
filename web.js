@@ -14,16 +14,17 @@ function TestUsers(){
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
   this.seriesAssertEqual = seriesAssertEqual;
-  var resultValue;
-  
+  var resultValue = [];
+  var answerValue = [];
+  var index = 0;
   function setup(){
     this.users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
   }
   function testAdd1(){
     console.log("STARTING THE ADD1");
-    resultValue = this.users.add("user1","password");
-    return seriesAssertEqual(this.users.SUCCESS, resultValue);
+    resultValue[index] = this.users.add("user1","password");
+    answerValue[index] = this.users.SUCCESS;
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
@@ -42,8 +43,15 @@ function TestUsers(){
     assert.equal(this.users.ERR_BAD_USERNAME, self.users.add("", "password"))
   }
   
-  function seriesAssertEqual(param1, param2){
-    assert.equal(param1, param2);
+  function assertThemAll(){
+    for(var i = 0; i<resultValue.length; i++){
+        if(assert.equal(resultValue[i], answerValue[i])){
+            console.log("test + " +i+ "passed");
+        }
+        else{
+            console.log("FAAAAAAAAILED");
+        }
+    }
   }
 }
 
@@ -221,6 +229,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     framework.testAddExists();
     framework.testAdd2();
     framework.testAddEmptyUsername();
+    framework.assertThemAll();
     res.end("end unit tests");
 });
 
