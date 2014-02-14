@@ -22,13 +22,10 @@ function TestUsers(){
   function testAdd1(){
     console.log("STARTING THE ADD1");
     async.series([
-        function(){
+        function(callback){
             var model = new UsersModel();
             temp = model.add("user1","password");
-        },
-        function(){
-            assert.equal(this.users.SUCCESS, temp);
-            console.log("WE GOT IT");
+            callback(temp);
         }
     ]);
     console.log("FINISHING ADD1");
@@ -51,7 +48,7 @@ function TestUsers(){
         },
         function(){
             assert.equal(this.users.ERR_USER_EXISTS,temp);
-            console.log("WE GOT IT");
+            console.log("Assert successful, ADDEXISTS");
 
         }
     ]);
@@ -69,8 +66,7 @@ function TestUsers(){
         function(){
             assert.equal(this.users.SUCCESS, temp);
             assert.equal(this.users.SUCCESS, temp2);
-            assert.equal(this.users.SUCCESS, temp-1); //should fail
-            console.log("WE GOT IT");
+            console.log("Assert successful, ADD2");
         }
     ]);
     console.log("FINISHING ADD2");
@@ -78,7 +74,18 @@ function TestUsers(){
 
   function testAddEmptyUsername(){
     console.log("STARTING THE TESTADDEMPTY");
-    assert.equal(this.users.ERR_BAD_USERNAME, this.users.add("", "password"))
+    async.series([
+        function(){
+            var model = new UsersModel();
+            temp = model.add("", "password");
+        },
+        function(){
+            assert.equal(this.users.ERR_BAD_USERNAME, temp);
+            console.log("Assert successful, TESTADDEMPTY");
+        }
+    ]);
+    console.log("FINISHING TESTADDEMPTY");
+
   }
 }
 
@@ -249,12 +256,17 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
     myUsers.TESTAPI_resetFixture();
     res.end("resetFixtured");
 });
+
 app.post('/TESTAPI/unitTests', function(req, res) {
     var framework = new TestUsers();
+    var model = new UsersModel();
     framework.setup();
-    framework.testAdd1();
-    framework.testAddExists();
-    framework.testAdd2();
+    framework.testAdd1(function(result){
+        assert.equal(model.SUCCESS, temp);
+        console.log("testadd1 is good");
+    });
+    //framework.testAddExists();
+    //framework.testAdd2();
     //framework.testAddEmptyUsername();
     res.end("end unit tests");
 });
