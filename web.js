@@ -144,7 +144,7 @@ function UsersModel(){
                 //console.log(result);
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
-                    console.log(self.ERR_BAD_USER_EXISTS);
+                    console.log("blahblah" + self.ERR_BAD_USER_EXISTS);
                     var resultingErrCode = self.ERR_BAD_USER_EXISTS;
                     callback(resultingErrCode);
                     //return this.ERR_BAD_USER_EXISTS;
