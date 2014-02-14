@@ -23,7 +23,8 @@ function TestUsers(){
     console.log("STARTING THE ADD1");
     async.series([
         function(){
-            temp = UsersModel.add("user1","password");
+            var model = new UsersModel();
+            temp = model.add("user1","password");
         },
         function(){
             assert.equal(this.users.SUCCESS, temp);
