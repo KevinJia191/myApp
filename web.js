@@ -111,8 +111,7 @@ function UsersModel(){
                     if(callback){
                         jsonObject = {
                             'errCode' : self.SUCCESS,
-                            'count' : row_count
-                        };
+                            'count' : row_count};
                         callback(jsonObject);
                         return;
                     }
@@ -204,40 +203,23 @@ app.get('/', function(req, res) {
 });
 
 app.post('users/add', function(req, res) {
+    res.write("hi");
+    res.end();
+    /*
     var username = req.body.user;
     var password = req.body.password;
-    res.set({'Content-Type': 'application/json'});
-
+    
     console.log("user = "+username);
     console.log("pass = "+password);
     
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-        if(username == ""){
-                jsonObject = {'errCode' : self.ERR_BAD_USERNAME};
-                callback(jsonObject);
-                res.end(JSON.stringify(jsonObject));
-                return null;
-        }
-        console.log('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';');
-        client.query('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';', function(err, result){
-            done();
-            if(err) return console.error(err);
-            if(result.rows.length > 0){
-                jsonObject ={'errCode' : self.ERR_BAD_USER_EXISTS};
-                res.end(JSON.stringify(jsonObject));
-                return null;
-            }
-            else{
-                console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-                client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-                jsonObject ={'errCode' : self.SUCCESS, count : 1};
-                res.end(JSON.stringify(jsonObject));
-                return null;
-            }
-        });
-        
+    var model = new UsersModel();
+    model.add(username, password, function(jsonObject) { 
+        console.log(jsonObject);
+        res.set({'Content-Type': 'application/json'})
+        res.end(JSON.stringify(jsonObject)); 
+        return;
     });
-    
+    */
 });
 
 app.post('users/login', function(req, res) {
