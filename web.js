@@ -70,6 +70,7 @@ function TestUsers(){
             assert.equal(this.users.SUCCESS, temp2);
             console.log("WE GOT IT");
         }
+    ]);
   }
 
   function testAddEmptyUsername(){
