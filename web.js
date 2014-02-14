@@ -132,7 +132,7 @@ function UsersModel(){
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             if(user == ""){
                 console.log("got a username thats an empty string");
-                var resultingErrCode = ERR_BAD_USERNAME;
+                var resultingErrCode = UsersModel.ERR_BAD_USERNAME;
                 callback(resultingErrCode);
                 //return this.ERR_BAD_USERNAME;
             }
@@ -146,14 +146,14 @@ function UsersModel(){
                     console.log("tried to add already existing user");
                     console.log("2"+UsersModel.ERR_BAD_USER_EXISTS);
                     console.log("3"+self.ERR_BAD_USER_EXISTS);
-                    var resultingErrCode = ERR_BAD_USER_EXISTS;
+                    var resultingErrCode = UsersModel.ERR_BAD_USER_EXISTS;
                     callback(resultingErrCode);
                     //return this.ERR_BAD_USER_EXISTS;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-                    var resultingErrCode = SUCCESS;
+                    var resultingErrCode = UsersModel.SUCCESS;
                     callback(resultingErrCode);
                     //return this.SUCCESS;
                 }
