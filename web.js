@@ -211,8 +211,7 @@ app.post('users/login', function(req, res) {
     
     var model = new UsersModel();
     model.add(username, password, function(jsonObject) { 
-        jsonObject = { "errCode" : result}
-        res.send(JSON.stringify(jsonObject);    
+        res.send(JSON.stringify(jsonObject));    
     });
     
     console.log("temp is " + temp);
