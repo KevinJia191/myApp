@@ -13,6 +13,7 @@ function TestUsers(){
   this.testAddExists=testAddExists;
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
+  this.seriesAssertEqual = seriesAssertEqual;
   var resultValue;
   
   function setup(){
@@ -22,7 +23,7 @@ function TestUsers(){
   function testAdd1(){
     console.log("STARTING THE ADD1");
     resultValue = this.users.add("user1","password");
-    return seriesAssertEuqal(this.users.SUCCESS, resultValue);
+    return seriesAssertEqual(this.users.SUCCESS, resultValue);
   }
   function testAddExists(){
     console.log("STARTING THE ADDEXISTS");
