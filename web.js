@@ -4,6 +4,7 @@ var app = express();
 var pg = require('pg');
 var assert = require('assert');
 var myUsers = new UsersModel();
+var async = require('async');
 
 function TestUsers(){
   //UnitTest!!!!
