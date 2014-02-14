@@ -28,7 +28,8 @@ function TestUsers(){
             callback(); 
         },
         function(callback){
-            assert.equal(this.users.SUCCESS, temp);
+            var model = new UsersModel();
+            assert.equal(model.SUCCESS, temp);
             console.log("Assert successful, ADD1");
             callback();
         }
