@@ -22,7 +22,7 @@ function TestUsers(){
   function testAdd1(){
     var model = new UsersModel();
     model.add("user1", "pass1", function(resultingErrCode){
-        assert.equal(this.users.SUCCESS, resultingErrCode);
+        assert.equal(users.SUCCESS, resultingErrCode);
     });
   }
   function testAddExists(){
