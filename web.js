@@ -8,7 +8,7 @@ var async = require('async');
 
 function TestUsers(){
   //UnitTest!!!!
-  this.users = new UsersModel();
+  //this.users = new UsersModel();
   this.setup = setup;
   this.testAdd1=testAdd1;
   this.testAddExists=testAddExists;
@@ -44,7 +44,7 @@ function TestUsers(){
         },
         function(){
             temp = model.add("user1", "password");
-        }
+        },
         function(){
             assert.equal(this.users.ERR_USER_EXISTS,temp);
         }
