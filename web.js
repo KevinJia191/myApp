@@ -207,7 +207,8 @@ app.get('/', function(req, res) {
 app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
-    
+    //console.log(req);
+    console.log(req.body);
     var username = req.body.user;
     var password = req.body.password;
 
