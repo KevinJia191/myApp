@@ -197,90 +197,109 @@ app.use(logfmt.requestLogger());
 
 app.get('/', function(req, res) {
   var body="";
+  //res.write('Goodbye World!');
+  
+  //res.send('How fancy can we get with this?');
   res.writeHead(200);
-  res.write('<html><body>'+body+'<br>');
-  res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/add"><input type="submit" value="resetFixture" onclick=this.form.action="TESTAPI/resetFixture"><input type="submit" value="unitTests" onclick=this.form.action="TESTAPI/unitTests">');
-  res.end('</form></body></html>');
+  res.write('<html><body>'+body+'<br>')
+  res.write('<form action="TESTAPI/unitTests" method="post"><input type="submit" value="UnitTest"></form><form action="TESTAPI/resetFixture" method="post"><input type="submit" value="resetBase"></form>');
+  res.end('<form action="signup" method="post">Username <input type="text" name="user"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/add"></form></body></html>');
+  //WE SHOULD USE POST INSTEAD 
+});
+
+app.configure(function(){
+  app.use(express.bodyParser());
+  app.use(app.router);
 });
 
 
 app.post('/users/login', function(req, res) {
+    //console.log(req.body);
     res.header('Content-Type', 'application/json');
-    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
-    
+    //res.write("<html><body>")
+    var body = "<button onclick='window.location.assign(\"http://radiant-temple-1017.herokuapp.com/\");'>Click me</button>";
     var username = req.body.user;
     var password = req.body.password;
-
+    //res.end('<html><body>'+username+' and '+password+'</body></html>');
+    //var user = req.param("username");
+    //var pass = req.param("password")
     console.log("user="+username);
     console.log("pass="+password);
 
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-        var query = client.query('SELECT * from login_info WHERE username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
+        //query = client.query('Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
+        //done();
+        //query.on('row',function(row) {
+
+      pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+        console.log('the first query is: Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';');
+        var query = client.query('Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
           done();
           if(err) return console.error(err);
+          console.log("rows length is "+result.rows.length);
           row_count = result.rows.length;
           if (row_count<1) {
-            var jsonObject = {
-              errCode: UsersModel.ERR_BAD_CREDENTIALS
+            var new_son = {
+              errCode: UserModel.ERR_BAD_CREDENTIALS
             };
-            var format_son = JSON.stringify(jsonObject);
-            res.end(jsonObject);
-            return;
+            var format_son = JSON.stringify(new_son);
+            res.end(format_son);
+            return null;
           }
+          console.log(result.rows[0].count);
 
+          console.log('the second query is UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+username+'\' AND password=\''+password+'\';');
           client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+username+'\' AND password=\''+password+'\';', function(err, result) {
             done();
             if(err) return console.error(err);
           });
-
-          var jsonObject = {
-            errCode: UsersModel.SUCCESS,
+          console.log(result.rows[0].count);
+          var new_son = {
+            errCode: UserModel.SUCCESS,
             count: (result.rows[0].count+1)
           };
-          var format_son = JSON.stringify(jsonObject);
-          res.end(jsonObject);
+          var format_son = JSON.stringify(new_son);
+          res.end(format_son);
         });
       });
   });
 
 
 app.post('/users/add', function(req, res) {
+    //console.log(req.body);
     res.header('Content-Type', 'application/json');
-
-    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
+    //res.write("<html><body>");
+    var body = "<button onclick='window.location.assign(\"http://radiant-temple-1017.herokuapp.com/\");'>Click me</button>";
     var user = req.body.user;
     var password = req.body.password;
-
-
-    console.log("user = " + user);
-    console.log("pass = " +  password);
-    
-    if (user.length > UsersModel.MAX_USERNAME_LENGTH){
-        var jsonObject = {
-            errCode: UsersModel.ERR_BAD_USERNAME
-        };
-        var jsonForm = JSON.stringify(jsonObject);
-        res.end(jsonForm);
-        return null;
+    //res.end('<html><body>'+username+' and '+password+'</body></html>');
+    //var user = req.param("username");
+    //var pass = req.param("password")
+    console.log("user="+user);
+    console.log("pass="+password);
+    if (user.length>UserModel.MAX_USERNAME_LENGTH){
+      var new_son = {
+              errCode: UserModel.ERR_BAD_USERNAME
+            };
+            var format_son = JSON.stringify(new_son);
+            res.end(format_son);
+      return null;
     }
-    
-    if (password.length > UsersModel.MAX_PASSWORD_LENGTH){
-        var jsonObject = {
-            errCode: UsersModel.ERR_BAD_PASSWORD
-        };
-        var jsonForm = JSON.stringify(jsonObject);
-        res.end(jsonForm);
-        return null;
+    if (password.length>UserModel.MAX_PASSWORD_LENGTH){
+      var new_son = {
+              errCode: UserModel.ERR_BAD_PASSWORD
+            };
+            var format_son = JSON.stringify(new_son);
+            res.end(format_son);
+      return null;
     }
-
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-        if(user == ""){
+      if(user == ""){
                 console.log("got a username thats an empty string");
-                var jsonObject = {
-                  errCode: UsersModel.ERR_BAD_USERNAME,
+                var new_son = {
+                  errCode: UserModel.ERR_BAD_USERNAME,
                 };
-                var jsonForm = JSON.stringify(jsonObject);
-                res.end(jsonForm);
+                var format_son = JSON.stringify(new_son);
+                res.end(format_son);
                 return null;
             }
            
@@ -291,65 +310,92 @@ app.post('/users/add', function(req, res) {
                 console.log('result');
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
-                    var jsonObject = {
-                      errCode: UsersModel.ERR_BAD_USER_EXISTS,
+                    var new_son = {
+                      errCode: UserModel.ERR_BAD_USER_EXISTS,
                     };
-                    var jsonForm = JSON.stringify(jsonObject);
-                    res.end(jsonForm);
+                    var format_son = JSON.stringify(new_son);
+                    res.end(format_son);
                     return null;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);", function(err,result){
-                        var jsonObject = {
-                            errCode: UsersModel.SUCCESS,
-                            count: 1
-                        };
-                        var jsonForm = JSON.stringify(jsonObject);
-                        res.end(jsonForm);
-                        return null;
-                    });
-                }
-            });
+                      var new_son = {
+                      errCode: UserModel.SUCCESS,
+                      count: 1
+                      };
+                      var format_son = JSON.stringify(new_son);
+                      res.end(format_son);
+                      console.log(format_son);
+                      return null;
+                      });
+                     }
+                 });
     });
+    //res.end();
 });
+
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
-    res.header('Content-Type' , 'application/json');
-    /*
-    myUser.TESTAPI_resetFixture(function(jsonObject){
-        res.end(JSON.stringify(jsonObject));
-        console.log(jsonObject);
-        return;
-    });
-    */
-    var jsonObject = {
-        errCode : UsersModel.SUCCESS
-    };
-    var jsonForm = JSON.stringify(jsonObject);
-    res.write(jsonForm);
-    myUser.TESTAPI_resetFixture();
-    res.end();
+  //res.writeHead(200, { 'content-type' : 'application/json' });
+  res.header('Content-Type', 'application/json');
+  var new_son = {
+    errCode: UserModel.SUCCESS
+  }
+  var format_son = JSON.stringify(new_son);
+  res.write(format_son);
+  ourUser.TESTAPI_resetFixture();
+  res.end();
 });
 
+
+
 app.post('/TESTAPI/unitTests', function(req, res) {
-    //var framework = new TestUsers();
-    //framework.setup();
-    //framework.testAdd1();
-    //framework.testAddExists();
-    //framework.testAdd2();
-    //framework.testAddEmptyUsername();
-    
-    var jsonObject = {};
-    jsonObject.nrFailed = 0;
-    jsonObject.output = "dummy test, cant get unit tests to work";
-    jsonObject.totalTests = 10;
-    console.log(jsonObject);
-    res.set({'Content-Type' : 'application/json'});
-    res.end(JSON.stringify(jsonObject));
-    return;
-    
+  res.header('Content-Type', 'application/json');
+  function async(arg, callback) {
+    console.log('do something with \''+arg+'\', return 1 sec later');
+    setTimeout(function() { callback(arg * 2); }, 1000);
+  }
+  // Final task (same in all the examples)
+  function final() { console.log('Done', results); }
+
+  // A simple async series:
+  var items = [ 1, 2, 3, 4, 5, 6 ];
+  var results = [];
+  function series(item) {
+    if(item) {
+      async( item, function(result) {
+        results.push(result);
+        return series(items.shift());
+      });
+    } else {
+      return final();
+    }
+  }
+  series(items.shift());
+  //res.end(); 
+
+  ourUser.TESTAPI_resetFixture();
+  var tester = new TestUsers();
+  console.log("STARTING THE UNIT TESTS");
+  tester.setup(function() {
+    tester.testAdd1(function(){
+      tester.setup(function(){
+        tester.testAddExists(function(){
+          tester.setup(function(){
+            tester.testAdd2(function(){
+              tester.testAddEmptyUsername(function(){
+                res.end("UNIT TESTS ARE OVER!"); 
+              });
+            });
+          });
+        })
+      });
+    });
+  });
+
 });
+
 
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
