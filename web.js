@@ -299,11 +299,11 @@ app.post('/users/add', function(req, res) {
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);", function(err,result){
-                      var new_son = {
+                      var jsonObject = {
                         errCode: UsersModel.SUCCESS,
                         count: 1
                       };
-                      var jsonObject = JSON.stringify(jsonObject);
+                      var jsonForm = JSON.stringify(jsonObject);
                       res.end(jsonForm);
                       return null;
                       });
