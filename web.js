@@ -313,12 +313,21 @@ app.post('/users/add', function(req, res) {
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
+    res.header('Content-Type' : 'application/json');
+    /*
     myUser.TESTAPI_resetFixture(function(jsonObject){
-        res.set({'Content-Type': 'application/json'})
         res.end(JSON.stringify(jsonObject));
         console.log(jsonObject);
         return;
     });
+    */
+    var jsonObject = {
+        errCode : UsersModel.SUCCESS
+    };
+    var jsonForm = JSON.stringify(jsonObject);
+    res.write(jsonForm);
+    myUser.TESTAPI_resetFixture();
+    res.end();
 });
 
 app.post('/TESTAPI/unitTests', function(req, res) {
