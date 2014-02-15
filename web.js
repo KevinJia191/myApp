@@ -6,14 +6,14 @@ var assert = require('assert');
 var myUsers = new UsersModel();
 var async = require('async');
 
-/*
+
 function TestUsers(){
   this.setup = setup;
   this.testAdd1=testAdd1;
   this.testAddExists=testAddExists;
   this.testAdd2=testAdd2;
   this.testAddEmptyUsername=testAddEmptyUsername;
-  var temp, temp2="9";
+  var temp, temp2;
   function setup(){
     users.TESTAPI_resetFixture();
     console.log("STARTING THE SETUP");
@@ -71,99 +71,122 @@ function TestUsers(){
     console.log("FINISHING TESTADDEMPTY");
   }
 }
-*/
-function UserModel(){
 
-  /* THIS FUNCTION DOES ONE OF THREE THINGS
-  1) Updates the counts of the logins in the database
-  2) Returns the counts of the logins including this one
-  3) Or else it will return an error code which we have to check for
-  */
-  this.login = login;
-  var hit_count=0;
-  function login(user,password,callback){
-    var row_count = 0;
-    var update_query;
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      console.log('the first query is: Select * from login_info where username=\''+user+'\' AND password=\''+password+'\';');
-      var query = client.query('Select * from login_info where username=\''+user+'\' AND password=\''+password+'\';', function(err, result) {
-        done();
-        if(err) return console.error(err);
-        console.log("rows length is "+result.rows.length);
-        row_count = result.rows.length;
-        if (row_count<1) {
-          var new_son = {
-            errCode: UserModel.ERR_BAD_CREDENTIALS
-          };
-          var format_son = JSON.stringify(new_son);
-          callback(format_son);
-          return null;
-        }
-        console.log(result.rows[0].count);
-        console.log("hit_count is %d",hit_count);
 
-        console.log('the second query is UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';');
-        client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';', function(err, result) {
-          done();
-          if(err) return console.error(err);
+function UsersModel(){
+    /*
+    var self = this;
+    this.ERR_BAD_CREDENTIALS = -1;
+    this.ERR_BAD_USER_EXISTS = -2;
+    this.ERR_BAD_USERNAME = -3;
+    this.ERR_BAD_PASSWORD = -4;
+    this.MAX_PASSWORD_LENGTH = 128;
+    this.MAX_USERNAME_LENGTH = 128;
+    this.SUCCESS = 1;
+    */
+    this.login = login;
+    this.add = add;
+    this.TESTAPI_resetFixture = TESTAPI_resetFixture;
+
+    var hit_count=0;
+    function login(user,password, callback){
+        var row_count = 0;
+        var update_query;
+        var jsonObject = {};
+        pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+            var query = client.query('Select * from login_info where username=\''+user+'\' AND password=\''+password+'\';', function(err, result) {
+                done();
+                if(err) return console.error(err);
+                row_count = result.rows.length;
+                if (row_count<1) {
+                    jsonObject = {'errCode' : UsersModel.ERR_BAD_CREDENTIALS};
+                    callback(jsonObject);
+                    return;
+                    
+                    //return UsersModel.ERR_BAD_CREDENTIALS;
+                }
+                console.log(result.rows[0].count);
+                console.log("hit_count is %d",hit_count);
+                console.log('the second query is UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';');
+                client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+user+'\' AND password=\''+password+'\';', function(err, result) {
+                    done();
+                    if(err) return console.error(err);
+                        jsonObject = {
+                            'errCode' : UsersModel.SUCCESS,
+                            'count' : row_count};
+                        callback(jsonObject);
+                        return;
+                    //return row_count;
+                });
+            });
         });
-        console.log(result.rows[0].count);
-        var new_son = {
-          errCode: UserModel.ERR_BAD_CREDENTIALS,
-          count: result.rows[0].count
-        };
-        var format_son = JSON.stringify(new_son);
-        callback(format_son);
-      });
-    });
-  }
-  this.add = add;
-  function add(user,password){
+    }
+  
+    /*
+    This function checks that the user does not exists, the user name is not empty.
+    (the password may be empty). If user does not exist, insert into db with a count of 1
+    @params
+    user: (string) the username
+    password: (string) the password
+    */
+    function add(user,password, callback){
+        var jsonObject;
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             if(user == ""){
-                console.log("got a username thats an empty string");
-                return this.ERR_BAD_USERNAME;
+                jsonObject = {'errCode' : UsersModel.ERR_BAD_USERNAME};
+                callback(jsonObject);
+                return;                
             }
-           
             console.log('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';');
             client.query('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';', function(err, result){
                 done();
                 if(err) return console.error(err);
-                console.log(result);
                 if(result.rows.length > 0){
-                    console.log("tried to add already existing user");
-                    return this.ERR_BAD_USER_EXISTS;
+                    jsonObject ={'errCode' : UsersModel.ERR_BAD_USER_EXISTS};
+                    callback(jsonObject);
+                    return;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
-                    return this.SUCCESS;
+                    jsonObject ={'errCode' : UsersModel.SUCCESS, count : 1};
+                    callback(jsonObject);
+                    return;
+                    
                 }
+            });
+            
+        });
+    }
+    
+    /*
+    This function tests our api UNIT TESTS
+    deletes all entries from login info table
+    */
+    function TESTAPI_resetFixture(callback){
+        var jsonObject;
+        pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+            client.query('DELETE from login_info', function(err, result) {
+                done();
+                if(err) return console.error(err);
+                
+                if(callback){
+                    jsonObject = {'errCode' : UsersModel.SUCCESS};
+                    callback(jsonObject);
+                    return;
+                }
+                
             });
         });
     }
-  /*
-  This method will delete all the database rows and return SUCCESS
-  */
-  this.TESTAPI_resetFixture = TESTAPI_resetFixture;
-  function TESTAPI_resetFixture(){
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      client.query('DELETE from login_info', function(err, result) {
-        done();
-        if(err) return console.error(err);
-        return UserModel.SUCCESS;
-      });
-    });
-  }
-
 }
-UserModel.ERR_BAD_CREDENTIALS = -1;
-UserModel.ERR_BAD_PASSWORD = -4;
-UserModel.ERR_BAD_USERNAME = -3;
-UserModel.ERR_BAD_USER_EXISTS = -2;
-UserModel.MAX_PASSWORD_LENGTH = 128;
-UserModel.MAX_USERNAME_LENGTH = 128;
-UserModel.SUCCESS = 1;
+UsersModel.ERR_BAD_CREDENTIALS = -1;
+UsersModel.ERR_BAD_PASSWORD = -4;
+UsersModel.ERR_BAD_USERNAME = -3;
+UsersModel.ERR_BAD_USER_EXISTS = -2;
+UsersModel.MAX_PASSWORD_LENGTH = 128;
+UsersModel.MAX_USERNAME_LENGTH = 128;
+UsersModel.SUCCESS = 1;
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -182,9 +205,6 @@ app.get('/', function(req, res) {
 });
 
 app.post('users/add', function(req, res) {
-    res.write("hi");
-    res.end();
-    /*
     var username = req.body.user;
     var password = req.body.password;
     
@@ -198,7 +218,6 @@ app.post('users/add', function(req, res) {
         res.end(JSON.stringify(jsonObject)); 
         return;
     });
-    */
 });
 
 app.post('users/login', function(req, res) {
