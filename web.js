@@ -3,9 +3,7 @@ var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
 var assert = require('assert');
-var myUsers = new UsersModel();
 var async = require('async');
-
 
 function TestUsers(){
   this.setup = setup;
@@ -204,49 +202,126 @@ app.get('/', function(req, res) {
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/add"><input type="submit" value="resetFixture" onclick=this.form.action="TESTAPI/resetFixture"><input type="submit" value="unitTests" onclick=this.form.action="TESTAPI/unitTests">');
   res.end('</form></body></html>');
 });
-
-app.post('users/add', function(req, res) {
+app.post('/users/login', function(req, res) {
+    //console.log(req.body);
+    res.header('Content-Type', 'application/json');
+    //res.write("<html><body>")
+    var body = "<button onclick='window.location.assign(\"http://radiant-temple-1017.herokuapp.com/\");'>Click me</button>";
     var username = req.body.user;
     var password = req.body.password;
-    res.set({'Content-Type': 'application/json'})
-    res.end(''); 
-    
-    console.log("user = "+username);
-    console.log("pass = "+password);
-    /*
-    var model = new UsersModel();
-    
-    model.add(username, password, function(jsonObject) { 
-        console.log(jsonObject);
-        res.set({'Content-Type': 'application/json'})
-        res.end(JSON.stringify(jsonObject)); 
-        return;
-    });
-    */
-});
+    //res.end('<html><body>'+username+' and '+password+'</body></html>');
+    //var user = req.param("username");
+    //var pass = req.param("password")
+    console.log("user="+username);
+    console.log("pass="+password);
 
-app.post('users/login', function(req, res) {
-    var username = req.body.user;
+        //query = client.query('Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
+        //done();
+        //query.on('row',function(row) {
+
+      pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+        console.log('the first query is: Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';');
+        var query = client.query('Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
+          done();
+          if(err) return console.error(err);
+          console.log("rows length is "+result.rows.length);
+          row_count = result.rows.length;
+          if (row_count<1) {
+            var new_son = {
+              errCode: UserModel.ERR_BAD_CREDENTIALS
+            };
+            var format_son = JSON.stringify(new_son);
+            res.end(format_son);
+            return null;
+          }
+          console.log(result.rows[0].count);
+
+          console.log('the second query is UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+username+'\' AND password=\''+password+'\';');
+          client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+username+'\' AND password=\''+password+'\';', function(err, result) {
+            done();
+            if(err) return console.error(err);
+          });
+          console.log(result.rows[0].count);
+          var new_son = {
+            errCode: UserModel.SUCCESS,
+            count: (result.rows[0].count+1)
+          };
+          var format_son = JSON.stringify(new_son);
+          res.end(format_son);
+        });
+      });
+  });
+
+
+app.post('/users/add', function(req, res) {
+    //console.log(req.body);
+    res.header('Content-Type', 'application/json');
+    //res.write("<html><body>");
+    var body = "<button onclick='window.location.assign(\"http://radiant-temple-1017.herokuapp.com/\");'>Click me</button>";
+    var user = req.body.user;
     var password = req.body.password;
-    res.set({'Content-Type': 'application/json'})
-    res.end(''); 
-    console.log("user = "+username);
-    console.log("pass = "+password);
-    /*
-    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN ADD ";
-    
-    var model = new UsersModel();
-    model.login(username, password, function(jsonObject){
-        console.log(jsonObject);
-        res.set({'Content-Type': 'application/json'});
-        var jsonObject2 = {};
-        jsonObject2.password = password;
-        jsonObject2.user = username;
-        console.log(jsonObject2);
-        res.end(JSON.stringify(jsonObject2));
-        return;
+    //res.end('<html><body>'+username+' and '+password+'</body></html>');
+    //var user = req.param("username");
+    //var pass = req.param("password")
+    console.log("user="+user);
+    console.log("pass="+password);
+    if (user.length>UserModel.MAX_USERNAME_LENGTH){
+      var new_son = {
+              errCode: UserModel.ERR_BAD_USERNAME
+            };
+            var format_son = JSON.stringify(new_son);
+            res.end(format_son);
+      return null;
+    }
+    if (password.length>UserModel.MAX_PASSWORD_LENGTH){
+      var new_son = {
+              errCode: UserModel.ERR_BAD_PASSWORD
+            };
+            var format_son = JSON.stringify(new_son);
+            res.end(format_son);
+      return null;
+    }
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      if(user == ""){
+                console.log("got a username thats an empty string");
+                var new_son = {
+                  errCode: UserModel.ERR_BAD_USERNAME,
+                };
+                var format_son = JSON.stringify(new_son);
+                res.end(format_son);
+                return null;
+            }
+           
+            console.log('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\'');
+            client.query('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\'', function(err, result){
+                done();
+                if(err) return console.error(err);
+                console.log('result');
+                if(result.rows.length > 0){
+                    console.log("tried to add already existing user");
+                    var new_son = {
+                      errCode: UserModel.ERR_BAD_USER_EXISTS,
+                    };
+                    var format_son = JSON.stringify(new_son);
+                    res.end(format_son);
+                    return null;
+                }
+                else{
+                    console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
+                    client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);", function(err,result){
+                      var new_son = {
+                      errCode: UserModel.SUCCESS,
+                      count: 1
+                      };
+                      var format_son = JSON.stringify(new_son);
+                      res.end(format_son);
+                      console.log(format_son);
+                      return null;
+                      });
+                     }
+                 });
     });
-    */
+    //res.end();
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
