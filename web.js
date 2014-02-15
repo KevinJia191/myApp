@@ -187,6 +187,7 @@ UsersModel.ERR_BAD_USER_EXISTS = -2;
 UsersModel.MAX_PASSWORD_LENGTH = 128;
 UsersModel.MAX_USERNAME_LENGTH = 128;
 UsersModel.SUCCESS = 1;
+var myUser = new UsersModel();
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -207,26 +208,31 @@ app.get('/', function(req, res) {
 app.post('users/add', function(req, res) {
     var username = req.body.user;
     var password = req.body.password;
+    res.set({'Content-Type': 'application/json'})
+    res.end(''); 
     
     console.log("user = "+username);
     console.log("pass = "+password);
-    
+    /*
     var model = new UsersModel();
+    
     model.add(username, password, function(jsonObject) { 
         console.log(jsonObject);
         res.set({'Content-Type': 'application/json'})
         res.end(JSON.stringify(jsonObject)); 
         return;
     });
+    */
 });
 
 app.post('users/login', function(req, res) {
     var username = req.body.user;
     var password = req.body.password;
-    
+    res.set({'Content-Type': 'application/json'})
+    res.end(''); 
     console.log("user = "+username);
     console.log("pass = "+password);
-
+    /*
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>WE ARE IN ADD ";
     
     var model = new UsersModel();
@@ -240,7 +246,7 @@ app.post('users/login', function(req, res) {
         res.end(JSON.stringify(jsonObject2));
         return;
     });
-    
+    */
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
@@ -259,6 +265,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     //framework.testAddExists();
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
+    /*
     var jsonObject = {};
     jsonObject.nrFailed = 0;
     jsonObject.output = "hi";
@@ -267,6 +274,9 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     res.set({'Content-Type': 'application/json'})
     res.end(JSON.stringify(jsonObject));
     return;
+    */
+    res.set({'Content-Type': 'application/json'})
+    res.end(''); 
 });
 
 var port = Number(process.env.PORT || 5000);
