@@ -202,93 +202,81 @@ app.get('/', function(req, res) {
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/add"><input type="submit" value="resetFixture" onclick=this.form.action="TESTAPI/resetFixture"><input type="submit" value="unitTests" onclick=this.form.action="TESTAPI/unitTests">');
   res.end('</form></body></html>');
 });
+
 app.post('/users/login', function(req, res) {
-    //console.log(req.body);
     res.header('Content-Type', 'application/json');
-    //res.write("<html><body>")
-    var body = "<button onclick='window.location.assign(\"http://radiant-temple-1017.herokuapp.com/\");'>Click me</button>";
+    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
+    
     var username = req.body.user;
     var password = req.body.password;
-    //res.end('<html><body>'+username+' and '+password+'</body></html>');
-    //var user = req.param("username");
-    //var pass = req.param("password")
+
     console.log("user="+username);
     console.log("pass="+password);
 
-        //query = client.query('Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
-        //done();
-        //query.on('row',function(row) {
-
-      pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-        console.log('the first query is: Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';');
-        var query = client.query('Select * from login_info where username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+        var query = client.query('SELECT * from login_info WHERE username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
           done();
           if(err) return console.error(err);
-          console.log("rows length is "+result.rows.length);
           row_count = result.rows.length;
           if (row_count<1) {
-            var new_son = {
+            var jsonObject = {
               errCode: UsersModel.ERR_BAD_CREDENTIALS
             };
-            var format_son = JSON.stringify(new_son);
-            res.end(format_son);
-            return null;
+            var format_son = JSON.stringify(jsonObject);
+            res.end(jsonObject);
+            return;
           }
-          console.log(result.rows[0].count);
 
-          console.log('the second query is UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+username+'\' AND password=\''+password+'\';');
           client.query('UPDATE login_info SET count='+(result.rows[0].count+1)+' WHERE username =\''+username+'\' AND password=\''+password+'\';', function(err, result) {
             done();
             if(err) return console.error(err);
           });
-          console.log(result.rows[0].count);
-          var new_son = {
+
+          var jsonObject = {
             errCode: UsersModel.SUCCESS,
             count: (result.rows[0].count+1)
           };
-          var format_son = JSON.stringify(new_son);
-          res.end(format_son);
+          var format_son = JSON.stringify(jsonObject);
+          res.end(jsonObject);
         });
       });
   });
 
 
 app.post('/users/add', function(req, res) {
-    //console.log(req.body);
     res.header('Content-Type', 'application/json');
-    //res.write("<html><body>");
-    var body = "<button onclick='window.location.assign(\"http://radiant-temple-1017.herokuapp.com/\");'>Click me</button>";
-    var user = req.body.user;
+
+    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
+    var username = req.body.user;
     var password = req.body.password;
-    //res.end('<html><body>'+username+' and '+password+'</body></html>');
-    //var user = req.param("username");
-    //var pass = req.param("password")
+
+
     console.log("user="+user);
     console.log("pass="+password);
-    if (user.length>UsersModel.MAX_USERNAME_LENGTH){
-      var new_son = {
-              errCode: UsersModel.ERR_BAD_USERNAME
-            };
-            var format_son = JSON.stringify(new_son);
-            res.end(format_son);
-      return null;
-    }
     if (password.length>UsersModel.MAX_PASSWORD_LENGTH){
-      var new_son = {
-              errCode: UsersModel.ERR_BAD_PASSWORD
-            };
-            var format_son = JSON.stringify(new_son);
-            res.end(format_son);
-      return null;
+        var jsonObject = {
+            errCode: UsersModel.ERR_BAD_PASSWORD
+        };
+        var jsonForm = JSON.stringify(jsonObject);
+        res.end(jsonForm);
+        return;
+    }
+    if (username.length>UsersModel.MAX_USERNAME_LENGTH){
+        var jsonObject = {
+            errCode: UsersModel.ERR_BAD_USERNAME
+        };
+        var jsonForm = JSON.stringify(jsonObject);
+        res.end(jsonForm);
+        return;
     }
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       if(user == ""){
                 console.log("got a username thats an empty string");
-                var new_son = {
+                var jsonObject = {
                   errCode: UsersModel.ERR_BAD_USERNAME,
                 };
-                var format_son = JSON.stringify(new_son);
-                res.end(format_son);
+                var jsonForm = JSON.stringify(jsonObject);
+                res.end(jsonForm);
                 return null;
             }
            
@@ -299,12 +287,12 @@ app.post('/users/add', function(req, res) {
                 console.log('result');
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
-                    var new_son = {
+                    var jsonObject = {
                       errCode: UsersModel.ERR_BAD_USER_EXISTS,
                     };
-                    var format_son = JSON.stringify(new_son);
-                    res.end(format_son);
-                    return null;
+                    var jsonForm = JSON.stringify(jsonObject);
+                    res.end(jsonForm);
+                    return;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
@@ -313,10 +301,9 @@ app.post('/users/add', function(req, res) {
                       errCode: UsersModel.SUCCESS,
                       count: 1
                       };
-                      var format_son = JSON.stringify(new_son);
-                      res.end(format_son);
-                      console.log(format_son);
-                      return null;
+                      var jsonObject = JSON.stringify(jsonObject);
+                      res.end(jsonForm);
+                      return;
                       });
                      }
                  });
@@ -340,7 +327,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     //framework.testAddExists();
     //framework.testAdd2();
     //framework.testAddEmptyUsername();
-    /*
+    
     var jsonObject = {};
     jsonObject.nrFailed = 0;
     jsonObject.output = "hi";
@@ -349,9 +336,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     res.set({'Content-Type': 'application/json'})
     res.end(JSON.stringify(jsonObject));
     return;
-    */
-    res.set({'Content-Type': 'application/json'})
-    res.end(''); 
+    
 });
 
 var port = Number(process.env.PORT || 5000);
