@@ -313,7 +313,7 @@ app.post('/users/add', function(req, res) {
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
-    res.header('Content-Type' : 'application/json');
+    res.header('Content-Type' , 'application/json');
     /*
     myUser.TESTAPI_resetFixture(function(jsonObject){
         res.end(JSON.stringify(jsonObject));
@@ -343,7 +343,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     jsonObject.output = "dummy test, cant get unit tests to work";
     jsonObject.totalTests = 10;
     console.log(jsonObject);
-    res.set({'Content-Type': 'application/json'})
+    res.set({'Content-Type', 'application/json'});
     res.end(JSON.stringify(jsonObject));
     return;
     
