@@ -244,43 +244,43 @@ app.post('/users/login', function(req, res) {
   });
 
 
-
 app.post('/users/add', function(req, res) {
-    //console.log(req.body);
     res.header('Content-Type', 'application/json');
-    //res.write("<html><body>");
-    var body = "<button onclick='window.location.assign(\"http://radiant-temple-1017.herokuapp.com/\");'>Click me</button>";
+    console.log(req);
+    console.log(req.body);
+    var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
     var user = req.body.user;
     var password = req.body.password;
-    //res.end('<html><body>'+username+' and '+password+'</body></html>');
-    //var user = req.param("username");
-    //var pass = req.param("password")
-    console.log("user="+user);
-    console.log("pass="+password);
-    if (user.length>UserModel.MAX_USERNAME_LENGTH){
-      var new_son = {
-              errCode: UserModel.ERR_BAD_USERNAME
-            };
-            var format_son = JSON.stringify(new_son);
-            res.end(format_son);
-      return null;
+
+    console.log("user = " + user);
+    console.log("pass = " +  password);
+    
+    if (user.length > UsersModel.MAX_USERNAME_LENGTH){
+        var jsonObject = {
+            errCode: UsersModel.ERR_BAD_USERNAME
+        };
+        var jsonForm = JSON.stringify(jsonObject);
+        res.end(jsonForm);
+        return null;
     }
-    if (password.length>UserModel.MAX_PASSWORD_LENGTH){
-      var new_son = {
-              errCode: UserModel.ERR_BAD_PASSWORD
-            };
-            var format_son = JSON.stringify(new_son);
-            res.end(format_son);
-      return null;
+    
+    if (password.length > UsersModel.MAX_PASSWORD_LENGTH){
+        var jsonObject = {
+            errCode: UsersModel.ERR_BAD_PASSWORD
+        };
+        var jsonForm = JSON.stringify(jsonObject);
+        res.end(jsonForm);
+        return null;
     }
+
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      if(user == ""){
-                console.log("got a username thats an empty string");
-                var new_son = {
-                  errCode: UserModel.ERR_BAD_USERNAME,
+        if(user == ""){
+                console.log("got a username thats an empty string, or quote quote");
+                var jsonObject = {
+                  errCode: UsersModel.ERR_BAD_USERNAME,
                 };
-                var format_son = JSON.stringify(new_son);
-                res.end(format_son);
+                var jsonForm = JSON.stringify(jsonObject);
+                res.end(jsonForm);
                 return null;
             }
            
@@ -291,29 +291,27 @@ app.post('/users/add', function(req, res) {
                 console.log('result');
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
-                    var new_son = {
-                      errCode: UserModel.ERR_BAD_USER_EXISTS,
+                    var jsonObject = {
+                      errCode: UsersModel.ERR_BAD_USER_EXISTS,
                     };
-                    var format_son = JSON.stringify(new_son);
-                    res.end(format_son);
+                    var jsonForm = JSON.stringify(jsonObject);
+                    res.end(jsonForm);
                     return null;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);", function(err,result){
-                      var new_son = {
-                      errCode: UserModel.SUCCESS,
-                      count: 1
-                      };
-                      var format_son = JSON.stringify(new_son);
-                      res.end(format_son);
-                      console.log(format_son);
-                      return null;
-                      });
-                     }
-                 });
+                        var jsonObject = {
+                            errCode: UsersModel.SUCCESS,
+                            count: 1
+                        };
+                        var jsonForm = JSON.stringify(jsonObject);
+                        res.end(jsonForm);
+                        return null;
+                    });
+                }
+            });
     });
-    //res.end();
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
