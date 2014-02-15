@@ -255,14 +255,6 @@ app.post('/users/add', function(req, res) {
     console.log("user = " + user);
     console.log("pass = " +  password);
     
-    if (password.length>UsersModel.MAX_PASSWORD_LENGTH){
-        var jsonObject = {
-            errCode: UsersModel.ERR_BAD_PASSWORD
-        };
-        var jsonForm = JSON.stringify(jsonObject);
-        res.end(jsonForm);
-        return null;
-    }
     if (user.length > UsersModel.MAX_USERNAME_LENGTH){
         var jsonObject = {
             errCode: UsersModel.ERR_BAD_USERNAME
@@ -271,6 +263,16 @@ app.post('/users/add', function(req, res) {
         res.end(jsonForm);
         return null;
     }
+    
+    if (password.length>UsersModel.MAX_PASSWORD_LENGTH){
+        var jsonObject = {
+            errCode: UsersModel.ERR_BAD_PASSWORD
+        };
+        var jsonForm = JSON.stringify(jsonObject);
+        res.end(jsonForm);
+        return null;
+    }
+
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
         if(user == ""){
                 console.log("got a username thats an empty string");
