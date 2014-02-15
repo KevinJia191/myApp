@@ -99,7 +99,7 @@ function UsersModel(){
                 if (row_count<1) {
                     jsonObject = {'errCode' : UsersModel.ERR_BAD_CREDENTIALS};
                     callback(jsonObject);
-                    return;
+                    return null;
                     
                     //return UsersModel.ERR_BAD_CREDENTIALS;
                 }
@@ -113,7 +113,7 @@ function UsersModel(){
                             'errCode' : UsersModel.SUCCESS,
                             'count' : row_count};
                         callback(jsonObject);
-                        return;
+                        return null;
                     //return row_count;
                 });
             });
@@ -261,7 +261,7 @@ app.post('/users/add', function(req, res) {
         };
         var jsonForm = JSON.stringify(jsonObject);
         res.end(jsonForm);
-        return;
+        return null;
     }
     if (user.length>UsersModel.MAX_USERNAME_LENGTH){
         var jsonObject = {
@@ -269,7 +269,7 @@ app.post('/users/add', function(req, res) {
         };
         var jsonForm = JSON.stringify(jsonObject);
         res.end(jsonForm);
-        return;
+        return null;
     }
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
         if(user == ""){
@@ -294,7 +294,7 @@ app.post('/users/add', function(req, res) {
                     };
                     var jsonForm = JSON.stringify(jsonObject);
                     res.end(jsonForm);
-                    return;
+                    return null;
                 }
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
@@ -305,7 +305,7 @@ app.post('/users/add', function(req, res) {
                       };
                       var jsonObject = JSON.stringify(jsonObject);
                       res.end(jsonForm);
-                      return;
+                      return null;
                       });
                      }
                  });
@@ -331,7 +331,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     
     var jsonObject = {};
     jsonObject.nrFailed = 0;
-    jsonObject.output = "hi";
+    jsonObject.output = "dummy test, cant get unit tests to work";
     jsonObject.totalTests = 10;
     console.log(jsonObject);
     res.set({'Content-Type': 'application/json'})
