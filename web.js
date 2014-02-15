@@ -98,7 +98,6 @@ function UsersModel(){
                     jsonObject = {'errCode' : self.ERR_BAD_CREDENTIALS};
                     callback(jsonObject);
                     return;
-                    
                     //return UsersModel.ERR_BAD_CREDENTIALS;
                 }
                 console.log(result.rows[0].count);
@@ -126,23 +125,34 @@ function UsersModel(){
     password: (string) the password
     */
     function add(user,password, callback){
+        console.log("1");
         var jsonObject;
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+                console.log("1");
             if(user == ""){
                 jsonObject = {'errCode' : self.ERR_BAD_USERNAME};
                 callback(jsonObject);
+                        console.log("1");
+
                 return;                
             }
+                    console.log("1");
+
             console.log('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';');
             client.query('SELECT * FROM login_info WHERE username=\''+user+'\' AND password=\'' + password+'\';', function(err, result){
                 done();
+                        console.log("1");
+
                 if(err) return console.error(err);
                 if(result.rows.length > 0){
                     jsonObject ={'errCode' : self.ERR_BAD_USER_EXISTS};
                     callback(jsonObject);
+                            console.log("1");
+
                     return;
                 }
-                else{
+                else{        console.log("1");
+
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     jsonObject ={'errCode' : self.SUCCESS, count : 1};
