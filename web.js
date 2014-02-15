@@ -249,7 +249,7 @@ app.post('/users/add', function(req, res) {
     console.log(req);
     console.log(req.body);
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
-    var user = req.body.user;
+    var user = req.body.username;
     var password = req.body.password;
 
     console.log("user = " + user);
