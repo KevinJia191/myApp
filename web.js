@@ -343,7 +343,7 @@ app.post('/TESTAPI/unitTests', function(req, res) {
     jsonObject.output = "dummy test, cant get unit tests to work";
     jsonObject.totalTests = 10;
     console.log(jsonObject);
-    res.set({'Content-Type', 'application/json'});
+    res.set({'Content-Type' : 'application/json'});
     res.end(JSON.stringify(jsonObject));
     return;
     
