@@ -203,6 +203,7 @@ app.get('/', function(req, res) {
   res.end('</form></body></html>');
 });
 
+
 app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
@@ -247,12 +248,13 @@ app.post('/users/add', function(req, res) {
     res.header('Content-Type', 'application/json');
 
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
-    var username = req.body.user;
+    var user = req.body.user;
     var password = req.body.password;
 
 
     console.log("user="+user);
     console.log("pass="+password);
+    
     if (password.length>UsersModel.MAX_PASSWORD_LENGTH){
         var jsonObject = {
             errCode: UsersModel.ERR_BAD_PASSWORD
@@ -261,7 +263,7 @@ app.post('/users/add', function(req, res) {
         res.end(jsonForm);
         return;
     }
-    if (username.length>UsersModel.MAX_USERNAME_LENGTH){
+    if (user.length>UsersModel.MAX_USERNAME_LENGTH){
         var jsonObject = {
             errCode: UsersModel.ERR_BAD_USERNAME
         };
@@ -270,7 +272,7 @@ app.post('/users/add', function(req, res) {
         return;
     }
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      if(user == ""){
+        if(user == ""){
                 console.log("got a username thats an empty string");
                 var jsonObject = {
                   errCode: UsersModel.ERR_BAD_USERNAME,
@@ -298,8 +300,8 @@ app.post('/users/add', function(req, res) {
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);", function(err,result){
                       var new_son = {
-                      errCode: UsersModel.SUCCESS,
-                      count: 1
+                        errCode: UsersModel.SUCCESS,
+                        count: 1
                       };
                       var jsonObject = JSON.stringify(jsonObject);
                       res.end(jsonForm);
@@ -308,7 +310,6 @@ app.post('/users/add', function(req, res) {
                      }
                  });
     });
-    //res.end();
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
