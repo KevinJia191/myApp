@@ -252,8 +252,8 @@ app.post('/users/add', function(req, res) {
     var password = req.body.password;
 
 
-    console.log("user="+user);
-    console.log("pass="+password);
+    console.log("user = " + user);
+    console.log("pass = " +  password);
     
     if (password.length>UsersModel.MAX_PASSWORD_LENGTH){
         var jsonObject = {
@@ -263,7 +263,7 @@ app.post('/users/add', function(req, res) {
         res.end(jsonForm);
         return null;
     }
-    if (user.length>UsersModel.MAX_USERNAME_LENGTH){
+    if (user.length > UsersModel.MAX_USERNAME_LENGTH){
         var jsonObject = {
             errCode: UsersModel.ERR_BAD_USERNAME
         };
@@ -299,21 +299,21 @@ app.post('/users/add', function(req, res) {
                 else{
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);", function(err,result){
-                      var jsonObject = {
-                        errCode: UsersModel.SUCCESS,
-                        count: 1
-                      };
-                      var jsonForm = JSON.stringify(jsonObject);
-                      res.end(jsonForm);
-                      return null;
-                      });
-                     }
-                 });
+                        var jsonObject = {
+                            errCode: UsersModel.SUCCESS,
+                            count: 1
+                        };
+                        var jsonForm = JSON.stringify(jsonObject);
+                        res.end(jsonForm);
+                        return null;
+                    });
+                }
+            });
     });
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
-    myUsers.TESTAPI_resetFixture(function(jsonObject){
+    myUser.TESTAPI_resetFixture(function(jsonObject){
         res.set({'Content-Type': 'application/json'})
         res.end(JSON.stringify(jsonObject));
         console.log(jsonObject);
