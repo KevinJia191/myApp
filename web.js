@@ -212,8 +212,8 @@ app.post('/users/login', function(req, res) {
     var username = req.body.user;
     var password = req.body.password;
 
-    console.log("user="+username);
-    console.log("pass="+password);
+    console.log("loginuser="+username);
+    console.log("loginpass="+password);
 
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
         var query = client.query('SELECT * from login_info WHERE username=\''+username+'\' AND password=\''+password+'\';', function(err, result) {
@@ -250,7 +250,7 @@ app.post('/users/add', function(req, res) {
     console.log(req);
     console.log(req.body);
     var body = "<button onclick='window.location.assign(\"http://fast-brook-9858.herokuapp.com/\");'>Click me</button>";
-    var user = req.body.username;
+    var user = req.body.user;
     var password = req.body.password;
 
     console.log("user = " + user);
