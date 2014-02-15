@@ -228,7 +228,7 @@ app.post('/users/login', function(req, res) {
           row_count = result.rows.length;
           if (row_count<1) {
             var new_son = {
-              errCode: UserModel.ERR_BAD_CREDENTIALS
+              errCode: UsersModel.ERR_BAD_CREDENTIALS
             };
             var format_son = JSON.stringify(new_son);
             res.end(format_son);
@@ -243,7 +243,7 @@ app.post('/users/login', function(req, res) {
           });
           console.log(result.rows[0].count);
           var new_son = {
-            errCode: UserModel.SUCCESS,
+            errCode: UsersModel.SUCCESS,
             count: (result.rows[0].count+1)
           };
           var format_son = JSON.stringify(new_son);
@@ -265,17 +265,17 @@ app.post('/users/add', function(req, res) {
     //var pass = req.param("password")
     console.log("user="+user);
     console.log("pass="+password);
-    if (user.length>UserModel.MAX_USERNAME_LENGTH){
+    if (user.length>UsersModel.MAX_USERNAME_LENGTH){
       var new_son = {
-              errCode: UserModel.ERR_BAD_USERNAME
+              errCode: UsersModel.ERR_BAD_USERNAME
             };
             var format_son = JSON.stringify(new_son);
             res.end(format_son);
       return null;
     }
-    if (password.length>UserModel.MAX_PASSWORD_LENGTH){
+    if (password.length>UsersModel.MAX_PASSWORD_LENGTH){
       var new_son = {
-              errCode: UserModel.ERR_BAD_PASSWORD
+              errCode: UsersModel.ERR_BAD_PASSWORD
             };
             var format_son = JSON.stringify(new_son);
             res.end(format_son);
@@ -285,7 +285,7 @@ app.post('/users/add', function(req, res) {
       if(user == ""){
                 console.log("got a username thats an empty string");
                 var new_son = {
-                  errCode: UserModel.ERR_BAD_USERNAME,
+                  errCode: UsersModel.ERR_BAD_USERNAME,
                 };
                 var format_son = JSON.stringify(new_son);
                 res.end(format_son);
@@ -300,7 +300,7 @@ app.post('/users/add', function(req, res) {
                 if(result.rows.length > 0){
                     console.log("tried to add already existing user");
                     var new_son = {
-                      errCode: UserModel.ERR_BAD_USER_EXISTS,
+                      errCode: UsersModel.ERR_BAD_USER_EXISTS,
                     };
                     var format_son = JSON.stringify(new_son);
                     res.end(format_son);
@@ -310,7 +310,7 @@ app.post('/users/add', function(req, res) {
                     console.log("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);");
                     client.query("INSERT INTO login_info (username, password, count) VALUES (\'"+user+"\', \'"+password+"\',1);", function(err,result){
                       var new_son = {
-                      errCode: UserModel.SUCCESS,
+                      errCode: UsersModel.SUCCESS,
                       count: 1
                       };
                       var format_son = JSON.stringify(new_son);
