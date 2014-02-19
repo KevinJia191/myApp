@@ -256,7 +256,7 @@ app.post('/users/add', function(req, res) {
     console.log("user = " + user);
     console.log("pass = " +  password);
     
-    if (user.length > UsersModel.MAX_USERNAME_LENGTH){
+    if (user.length > UsersModel.MAX_USERNAME_LENGTH || user.length == 0){
         var jsonObject = {
             errCode: UsersModel.ERR_BAD_USERNAME
         };
@@ -265,7 +265,7 @@ app.post('/users/add', function(req, res) {
         return null;
     }
     
-    if (password.length > UsersModel.MAX_PASSWORD_LENGTH){
+    if (password.length > UsersModel.MAX_PASSWORD_LENGTH || password.length == 0){
         var jsonObject = {
             errCode: UsersModel.ERR_BAD_PASSWORD
         };
